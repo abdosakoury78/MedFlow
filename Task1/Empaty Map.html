@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HealthPlus – User Personas</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #f0f4f8;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 48px 24px;
+  }
+
+  /* ── Header ── */
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .brand-icon {
+    width: 38px; height: 38px;
+    background: #1a6b5a;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; color: #fff;
+  }
+  .brand-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    color: #0f2a23;
+    letter-spacing: -0.5px;
+  }
+  .brand-name span { color: #1a6b5a; }
+  .subtitle {
+    font-size: 13px;
+    color: #6b7c80;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 48px;
+  }
+
+  /* ── Grid ── */
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    max-width: 980px;
+    width: 100%;
+  }
+
+  /* ── Card ── */
+  .card {
+    border-radius: 24px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 4px 32px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Photo banner */
+  .photo-banner {
+    height: 240px;
+    position: relative;
+    overflow: hidden;
+  }
+  .photo-banner img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: top center;
+  }
+  .photo-banner::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.45));
+  }
+  .badge {
+    position: absolute;
+    bottom: 16px; left: 20px;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #fff;
+  }
+  .badge-icon {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    backdrop-filter: blur(6px);
+    border: 1.5px solid rgba(255,255,255,0.4);
+  }
+  .badge-label {
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 600;
+    opacity: 0.9;
+  }
+
+  /* Patient colors */
+  .card.patient .photo-banner { background: #d4eae5; }
+  .card.patient .badge-icon { background: rgba(26,107,90,0.55); }
+  .card.patient .section-title { color: #1a6b5a; }
+  .card.patient .feature-dot { background: #1a6b5a; }
+  .card.patient .tag { background: #e6f4f1; color: #1a6b5a; }
+
+  /* Doctor colors */
+  .card.doctor .photo-banner { background: #dce8f5; }
+  .card.doctor .badge-icon { background: rgba(26,72,130,0.55); }
+  .card.doctor .section-title { color: #1a4882; }
+  .card.doctor .feature-dot { background: #1a4882; }
+  .card.doctor .tag { background: #e5edf8; color: #1a4882; }
+
+  /* Body */
+  .card-body { padding: 24px 24px 28px; flex: 1; display: flex; flex-direction: column; gap: 20px; }
+
+  .name-row { display: flex; flex-direction: column; gap: 2px; }
+  .persona-name { font-family: 'DM Serif Display', serif; font-size: 22px; color: #0f2a23; }
+  .persona-meta { font-size: 12px; color: #8a9ba0; font-weight: 500; }
+
+  .quote {
+    font-size: 13.5px;
+    color: #3d5157;
+    font-style: italic;
+    line-height: 1.65;
+    padding-left: 14px;
+    border-left: 3px solid #d0dde0;
+  }
+
+  .section-title {
+    font-size: 10px;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .features { display: flex; flex-direction: column; gap: 8px; }
+  .feature-item { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: #2d4147; line-height: 1.5; }
+  .feature-dot { width: 7px; height: 7px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tag { border-radius: 20px; padding: 5px 13px; font-size: 11.5px; font-weight: 600; }
+
+  /* Divider */
+  .divider-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #a0b0b5;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    max-width: 980px;
+    margin: 0 0 28px;
+  }
+  .divider-label::before, .divider-label::after {
+    content: ''; flex: 1; height: 1px; background: #d5dee0;
+  }
+
+  @media (max-width: 680px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="brand">
+  <div class="brand-icon">✚</div>
+  <div class="brand-name">Health<span>Plus</span></div>
+</div>
+<div class="subtitle">User Personas</div>
+
+<div class="divider-label">Two Roles · One Platform</div>
+
+<div class="grid">
+
+  <!-- ── PATIENT ── -->
+  <div class="card patient">
+    <div class="photo-banner">
+      <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=700&q=80" alt="Patient - Ahmed">
+      <div class="badge">
+        <div class="badge-icon">🩺</div>
+        <div class="badge-label">Patient</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="name-row">
+        <div class="persona-name">Ahmed Hassan</div>
+        <div class="persona-meta">32 yrs · Software Engineer · Cairo</div>
+      </div>
+
+      <p class="quote">"I just want to book an appointment fast and not wait on hold for 20 minutes."</p>
+
+      <div>
+        <div class="section-title">What he does in HealthPlus</div>
+        <div class="features">
+          <div class="feature-item"><div class="feature-dot"></div>Signs up & logs in securely</div>
+          <div class="feature-item"><div class="feature-dot"></div>Books appointments with his doctor</div>
+          <div class="feature-item"><div class="feature-dot"></div>Views & edits his own profile</div>
+          <div class="feature-item"><div class="feature-dot"></div>Tracks upcoming & past visits</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-title">Goals</div>
+        <div class="tags">
+          <span class="tag">Quick Booking</span>
+          <span class="tag">No Paperwork</span>
+          <span class="tag">My Records</span>
+          <span class="tag">Easy Login</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── DOCTOR ── -->
+  <div class="card doctor">
+    <div class="photo-banner">
+      <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=700&q=80" alt="Doctor - Dr. Karim">
+      <div class="badge">
+        <div class="badge-icon">👨‍⚕️</div>
+        <div class="badge-label">Doctor</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="name-row">
+        <div class="persona-name">Dr. Karim Nour</div>
+        <div class="persona-meta">45 yrs · General Practitioner · Alexandria</div>
+      </div>
+
+      <p class="quote">"I need to see my full schedule and my patients' info in one place — no chaos."</p>
+
+      <div>
+        <div class="section-title">What he does in HealthPlus</div>
+        <div class="features">
+          <div class="feature-item"><div class="feature-dot"></div>Logs in with a doctor account</div>
+          <div class="feature-item"><div class="feature-dot"></div>Views all patient appointments</div>
+          <div class="feature-item"><div class="feature-dot"></div>Manages & edits his doctor profile</div>
+          <div class="feature-item"><div class="feature-dot"></div>Keeps track of his clinic schedule</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-title">Goals</div>
+        <div class="tags">
+          <span class="tag">Patient Overview</span>
+          <span class="tag">Schedule Control</span>
+          <span class="tag">Profile Mgmt</span>
+          <span class="tag">No Double Booking</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
