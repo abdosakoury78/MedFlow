@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MedFlow – Empathy Map</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #eef2ef;
+    padding: 40px 32px 48px;
+    min-width: 1200px;
+  }
+
+  /* ── HEADER ── */
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 32px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .brand-icon {
+    width: 36px; height: 36px;
+    background: #1a6b5a;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; color: #fff;
+  }
+  .brand-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 26px;
+    color: #0f2a23;
+    letter-spacing: -0.5px;
+  }
+  .brand-name span { color: #1a6b5a; }
+  .page-title {
+    font-size: 11px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #8a9ba0;
+    font-weight: 600;
+  }
+
+  /* ── COLUMNS ── */
+  .columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+
+  /* ── PERSONA COLUMN ── */
+  .persona-col {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* ── PERSONA HEADER ── */
+  .persona-header {
+    border-radius: 18px;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .persona-header.patient { background: #1a6b5a; }
+  .persona-header.doctor  { background: #1a4882; }
+
+  .persona-photo {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: top;
+    border: 3px solid rgba(255,255,255,0.4);
+    flex-shrink: 0;
+  }
+  .persona-role {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.65);
+    font-weight: 600;
+    margin-bottom: 3px;
+  }
+  .persona-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    color: #fff;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .persona-meta {
+    font-size: 11.5px;
+    color: rgba(255,255,255,0.6);
+  }
+
+  /* ── QUOTE ── */
+  .quote-bar {
+    border-radius: 14px;
+    padding: 14px 18px;
+    display: flex;
+    gap: 12px;
+    font-style: italic;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #2d4147;
+  }
+  .patient-col .quote-bar { background: #e6f4f1; border-left: 3px solid #1a6b5a; }
+  .doctor-col  .quote-bar { background: #e5edf8; border-left: 3px solid #1a4882; }
+  .q-mark { font-size: 26px; line-height: 1; opacity: 0.4; flex-shrink: 0; margin-top: -4px; }
+
+  /* ── CARDS ── */
+  .em-card {
+    background: #fff;
+    border-radius: 14px;
+    border: 1.5px solid #e4ece9;
+    overflow: hidden;
+  }
+
+  .card-head {
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    border-bottom: 1px solid #eef2ef;
+  }
+  .patient-col .card-head { background: #f0faf7; }
+  .doctor-col  .card-head { background: #eef3fb; }
+
+  .card-icon {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .patient-col .card-icon { background: #1a6b5a; color: #fff; }
+  .doctor-col  .card-icon { background: #1a4882; color: #fff; }
+
+  .card-label {
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+  }
+  .patient-col .card-label { color: #1a6b5a; }
+  .doctor-col  .card-label { color: #1a4882; }
+
+  .card-body {
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .em-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 12px;
+    color: #2d4147;
+    line-height: 1.45;
+  }
+  .dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    margin-top: 5px;
+    flex-shrink: 0;
+  }
+  .patient-col .dot { background: #1a6b5a; }
+  .doctor-col  .dot { background: #1a4882; }
+
+  /* ── QUAD GRID ── */
+  .quad-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  /* ── THINK ── */
+  .think-card {
+    background: #fff;
+    border-radius: 14px;
+    border: 1.5px solid #e4ece9;
+    overflow: hidden;
+  }
+  .think-bubbles {
+    padding: 12px 14px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .bubble {
+    border-radius: 999px;
+    padding: 5px 13px;
+    font-size: 11.5px;
+    font-weight: 500;
+  }
+  .patient-col .bubble { background: #e6f4f1; color: #1a6b5a; border: 1.5px solid #9fd4c6; }
+  .doctor-col  .bubble { background: #e5edf8; color: #1a4882; border: 1.5px solid #9ab8e0; }
+
+  /* ── PAIN / GAIN ── */
+  .pg-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .pain-card .card-head { background: #fdecea !important; border-color: #fad4d0 !important; }
+  .pain-card .card-label { color: #c0392b !important; }
+  .pain-card .card-icon { background: #e74c3c !important; }
+  .pain-card .dot { background: #e74c3c !important; }
+
+  .gain-card .card-head { background: #eafaf1 !important; border-color: #c3efd4 !important; }
+  .gain-card .card-label { color: #1e8449 !important; }
+  .gain-card .card-icon { background: #27ae60 !important; }
+  .gain-card .dot { background: #27ae60 !important; }
+
+  /* say & do row layout */
+  .say-body {
+    flex-direction: row !important;
+    flex-wrap: wrap;
+    gap: 7px 28px !important;
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="brand">
+    <div class="brand-icon">✚</div>
+    <div class="brand-name">Med<span>Flow</span></div>
+  </div>
+  <div class="page-title">Empathy Map · Two Personas</div>
+</div>
+
+<div class="columns">
+
+  <!-- ══ PATIENT ══ -->
+  <div class="persona-col patient-col">
+
+    <div class="persona-header patient">
+      <img class="persona-photo" src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=200&q=80" alt="Ahmed">
+      <div>
+        <div class="persona-role">Patient</div>
+        <div class="persona-name">Ahmed Hassan</div>
+        <div class="persona-meta">32 · Software Engineer · Cairo</div>
+      </div>
+    </div>
+
+    <div class="quote-bar">
+      <span class="q-mark">"</span>
+      I just want to book fast — without being put on hold or filling the same form twice.
+    </div>
+
+    <div class="think-card">
+      <div class="card-head patient-col">
+        <div class="card-icon">🧠</div>
+        <div class="card-label">Think & Feel</div>
+      </div>
+      <div class="think-bubbles">
+        <span class="bubble">Will my data be safe?</span>
+        <span class="bubble">Is this doctor good?</span>
+        <span class="bubble">How long will I wait?</span>
+        <span class="bubble">Can I cancel if needed?</span>
+        <span class="bubble">I hate phone calls</span>
+      </div>
+    </div>
+
+    <div class="quad-grid">
+      <div class="em-card">
+        <div class="card-head patient-col">
+          <div class="card-icon">👁</div>
+          <div class="card-label">See</div>
+        </div>
+        <div class="card-body">
+          <div class="em-item"><div class="dot"></div>Long queues at clinics</div>
+          <div class="em-item"><div class="dot"></div>Friends book via apps</div>
+          <div class="em-item"><div class="dot"></div>Outdated clinic websites</div>
+          <div class="em-item"><div class="dot"></div>Doctors hard to reach</div>
+        </div>
+      </div>
+      <div class="em-card">
+        <div class="card-head patient-col">
+          <div class="card-icon">👂</div>
+          <div class="card-label">Hear</div>
+        </div>
+        <div class="card-body">
+          <div class="em-item"><div class="dot"></div>"Book online, it's easier"</div>
+          <div class="em-item"><div class="dot"></div>"The wait was 2 hours!"</div>
+          <div class="em-item"><div class="dot"></div>"My records got lost"</div>
+          <div class="em-item"><div class="dot"></div>"The app is confusing"</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="em-card">
+      <div class="card-head patient-col">
+        <div class="card-icon">💬</div>
+        <div class="card-label">Say & Do</div>
+      </div>
+      <div class="card-body say-body">
+        <div class="em-item"><div class="dot"></div>Googles doctors & reviews</div>
+        <div class="em-item"><div class="dot"></div>Books & cancels via app</div>
+        <div class="em-item"><div class="dot"></div>Updates profile before visit</div>
+        <div class="em-item"><div class="dot"></div>Checks appointment reminders</div>
+      </div>
+    </div>
+
+    <div class="pg-grid">
+      <div class="em-card pain-card">
+        <div class="card-head">
+          <div class="card-icon">😤</div>
+          <div class="card-label">Pains</div>
+        </div>
+        <div class="card-body">
+          <div class="em-item"><div class="dot"></div>Waiting on hold to book</div>
+          <div class="em-item"><div class="dot"></div>No confirmation messages</div>
+          <div class="em-item"><div class="dot"></div>Repeating info every visit</div>
+          <div class="em-item"><div class="dot"></div>Can't see available slots</div>
+        </div>
+      </div>
+      <div class="em-card gain-card">
+        <div class="card-head">
+          <div class="card-icon">🎯</div>
+          <div class="card-label">Gains</div>
+        </div>
+        <div class="card-body">
+          <div class="em-item"><div class="dot"></div>Book in under 2 minutes</div>
+          <div class="em-item"><div class="dot"></div>Instant SMS confirmation</div>
+          <div class="em-item"><div class="dot"></div>My records, always there</div>
+          <div class="em-item"><div class="dot"></div>Easy reschedule anytime</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══ DOCTOR ══ -->
+  <div class="persona-col doctor-col">
+
+    <div class="persona-header doctor">
+      <img class="persona-photo" src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=200&q=80" alt="Dr. Karim">
+      <div>
+        <div class="persona-role">Doctor</div>
+        <div class="persona-name">Dr. Karim Nour</div>
+        <div class="persona-meta">45 · General Practitioner · Alexandria</div>
+      </div>
+    </div>
+
+    <div class="quote-bar">
+      <span class="q-mark">"</span>
+      I need my full schedule and patient info in one place — no chaos before every appointment.
+    </div>
+
+    <div class="think-card">
+      <div class="card-head doctor-col">
+        <div class="card-icon">🧠</div>
+        <div class="card-label">Think & Feel</div>
+      </div>
+      <div class="think-bubbles">
+        <span class="bubble">Am I double-booked again?</span>
+        <span class="bubble">Who's next?</span>
+        <span class="bubble">Is this data reliable?</span>
+        <span class="bubble">I need less admin work</span>
+        <span class="bubble">Will patients show up?</span>
+      </div>
+    </div>
+
+    <div class="quad-grid">
+      <div class="em-card">
+        <div class="card-head doctor-col">
+          <div class="card-icon">👁</div>
+          <div class="card-label">See</div>
+        </div>
+        <div class="card-body">
+          <div class="em-item"><div class="dot"></div>Messy paper appointment books</div>
+          <div class="em-item"><div class="dot"></div>Colleagues using digital tools</div>
+          <div class="em-item"><div class="dot"></div>Patients arriving unprepared</div>
+          <div class="em-item"><div class="dot"></div>No-shows with no warning</div>
+        </div>
+      </div>
+      <div class="em-card">
+        <div class="card-head doctor-col">
+          <div class="card-icon">👂</div>
+          <div class="card-label">Hear</div>
+        </div>
+        <div class="card-body">
+          <div class="em-item"><div class="dot"></div>"Use a digital system, doc"</div>
+          <div class="em-item"><div class="dot"></div>"My appointment got mixed up"</div>
+          <div class="em-item"><div class="dot"></div>"The old system crashed again"</div>
+          <div class="em-item"><div class="dot"></div>"Patients want reminders"</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="em-card">
+      <div class="card-head doctor-col">
+        <div class="card-icon">💬</div>
+        <div class="card-label">Say & Do</div>
+      </div>
+      <div class="card-body say-body">
+        <div class="em-item"><div class="dot"></div>Reviews daily patient list</div>
+        <div class="em-item"><div class="dot"></div>Updates his clinic profile</div>
+        <div class="em-item"><div class="dot"></div>Manages & blocks time slots</div>
+        <div class="em-item"><div class="dot"></div>Checks patient history before visits</div>
+      </div>
+    </div>
+
+    <div class="pg-grid">
+      <div class="em-card pain-card">
+        <div class="card-head">
+          <div class="card-icon">😤</div>
+          <div class="card-label">Pains</div>
+        </div>
+        <div class="card-body">
+          <div class="em-item"><div class="dot"></div>Double bookings & clashes</div>
+          <div class="em-item"><div class="dot"></div>No patient history on hand</div>
+          <div class="em-item"><div class="dot"></div>Too much admin, less care</div>
+          <div class="em-item"><div class="dot"></div>No-shows waste clinic time</div>
+        </div>
+      </div>
+      <div class="em-card gain-card">
+        <div class="card-head">
+          <div class="card-icon">🎯</div>
+          <div class="card-label">Gains</div>
+        </div>
+        <div class="card-body">
+          <div class="em-item"><div class="dot"></div>Full schedule at a glance</div>
+          <div class="em-item"><div class="dot"></div>Patient info ready before visit</div>
+          <div class="em-item"><div class="dot"></div>Zero double bookings</div>
+          <div class="em-item"><div class="dot"></div>Auto reminders cut no-shows</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+</body>
+</html>
