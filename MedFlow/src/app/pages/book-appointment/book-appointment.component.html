@@ -1,0 +1,130 @@
+<div class="app-layout" *ngIf="doctor">
+  <!-- Desktop Sidebar -->
+  <aside class="desktop-sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-icon">➕</div>
+      <span class="sidebar-logo-text">MedFlow</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a class="sidebar-nav-item" routerLink="/home">
+        <span class="sidebar-nav-icon">🏠</span> Home
+      </a>
+      <a class="sidebar-nav-item active">
+        <span class="sidebar-nav-icon">📅</span> Appointments
+      </a>
+      <a class="sidebar-nav-item">
+        <span class="sidebar-nav-icon">🔍</span> Find Doctor
+      </a>
+      <a routerLink="/profile" class="sidebar-nav-item">
+        <span class="sidebar-nav-icon">👤</span> My Profile
+      </a>
+    </nav>
+    <div class="sidebar-user">
+      <div class="sidebar-user-avatar">👤</div>
+      <div class="sidebar-user-info">
+        <div class="sidebar-user-name">Ahmed</div>
+        <div class="sidebar-user-role">Patient</div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main-content">
+    <div class="page-container">
+
+      <!-- Header -->
+      <div class="page-header">
+        <button class="back-btn" (click)="goBack()">←</button>
+        <h2 class="page-title">Book Appointment</h2>
+        <div style="width:40px"></div>
+      </div>
+
+      <div class="book-content">
+
+        <!-- Doctor Card -->
+        <div class="doctor-mini-card card">
+          <div class="mini-avatar">{{ doctor.avatar }}</div>
+          <div class="mini-info">
+            <div class="mini-name">{{ doctor.name }}</div>
+            <div class="mini-spec">{{ doctor.specialty }} • {{ doctor.experience }} years exp.</div>
+            <div class="mini-rating">⭐ {{ doctor.rating }} ({{ doctor.reviews }} reviews)</div>
+          </div>
+        </div>
+
+        <!-- Date Selection -->
+        <div class="calendar-section">
+          <div class="cal-header">
+            <h3 class="cal-title">Select Date</h3>
+            <div class="cal-month-nav">
+              <button class="nav-arrow">‹</button>
+              <span class="cal-month">{{ currentMonth }}</span>
+              <button class="nav-arrow">›</button>
+            </div>
+          </div>
+
+          <div class="calendar card">
+            <div class="weekdays-row">
+              <span class="weekday" *ngFor="let wd of weekdays">{{ wd }}</span>
+            </div>
+            <div class="days-grid">
+              <button
+                class="day-btn"
+                *ngFor="let d of calendarDays"
+                [class.selected]="d.day === selectedDay"
+                [class.weekend]="d.isWeekend"
+                [class.grayed]="d.day === 30"
+                [class.has-slot]="d.hasSlot && d.day !== selectedDay"
+                (click)="selectDay(d.day)"
+              >
+                {{ d.day }}
+                <span class="slot-dot" *ngIf="d.hasSlot && d.day !== selectedDay"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Time Slots -->
+        <div class="slots-section">
+          <h3 class="slots-title">Available Slots</h3>
+          <div class="slots-grid">
+            <button
+              class="slot-btn"
+              *ngFor="let slot of timeSlots"
+              [class.selected]="slot.time === selectedSlot"
+              [class.unavailable]="!slot.available"
+              (click)="selectSlot(slot)"
+              [disabled]="!slot.available"
+            >
+              {{ slot.time }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Info Banner -->
+        <div class="info-banner">
+          <span class="info-icon">ℹ️</span>
+          <p class="info-text">Please arrive 15 minutes before your scheduled appointment time for initial check-in and vitals</p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Confirm Footer -->
+    <div class="confirm-footer">
+      <div class="confirm-details">
+        <div class="confirm-item">
+          <div class="confirm-label">TOTAL FEES</div>
+          <div class="confirm-value primary">${{ doctor.consultationFee }}.00</div>
+        </div>
+        <div class="confirm-item">
+          <div class="confirm-label">DATE &amp; TIME</div>
+          <div class="confirm-value">Oct {{ selectedDay }}, {{ selectedSlot }}</div>
+        </div>
+      </div>
+      <button class="btn-primary confirm-btn" (click)="confirmBooking()">
+        {{ confirmed ? '✅ Booking Confirmed!' : 'Confirm Booking 📅' }}
+      </button>
+    </div>
+
+    <app-navbar activePage="appointments"></app-navbar>
+  </div>
+</div>

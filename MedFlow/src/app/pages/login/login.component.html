@@ -1,0 +1,95 @@
+<div class="login-page">
+  <!-- Desktop left panel -->
+  <div class="login-left">
+    <div class="login-brand">
+      <div class="brand-icon">➕</div>
+      <span class="brand-name">MedFlow</span>
+    </div>
+    <div class="login-hero">
+      <h1 class="hero-title">Your Health,<br><em>Simplified.</em></h1>
+      <p class="hero-sub">Connect with top specialists, manage appointments, and take control of your wellness journey — all in one place.</p>
+      <div class="hero-stats">
+        <div class="stat">
+          <div class="stat-num">500+</div>
+          <div class="stat-label">Doctors</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">50k+</div>
+          <div class="stat-label">Patients</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">4.9★</div>
+          <div class="stat-label">Rating</div>
+        </div>
+      </div>
+    </div>
+    <div class="decorative-circles">
+      <div class="circle c1"></div>
+      <div class="circle c2"></div>
+      <div class="circle c3"></div>
+    </div>
+  </div>
+
+  <!-- Login card (mobile: full screen, desktop: right panel) -->
+  <div class="login-right">
+    <div class="login-card">
+      <div class="card-icon">
+        <div class="icon-wrap">➕</div>
+      </div>
+
+      <h2 class="card-title">Welcome to<br>MedFlow</h2>
+      <p class="card-sub">Empowering your wellness journey</p>
+
+      <div class="form-group">
+        <label class="form-label">EMAIL ADDRESS</label>
+        <input
+          type="email"
+          class="form-input"
+          placeholder="name@example.com"
+          [(ngModel)]="email"
+        />
+      </div>
+
+      <div class="form-group">
+        <div class="label-row">
+          <label class="form-label">PASSWORD</label>
+          <button class="forgot-btn">Forgot?</button>
+        </div>
+        <div class="input-wrap">
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            class="form-input"
+            placeholder="••••••••"
+            [(ngModel)]="password"
+          />
+          <button class="toggle-pw" (click)="togglePassword()">
+            {{ showPassword ? '🙈' : '👁️' }}
+          </button>
+        </div>
+      </div>
+
+      <button class="btn-primary sign-in-btn" (click)="onSignIn()">Sign In</button>
+
+      <div class="divider">
+        <span class="divider-line"></span>
+        <span class="divider-text">OR</span>
+        <span class="divider-line"></span>
+      </div>
+
+      <button class="btn-google">
+        <span class="google-icon">G</span>
+        Continue with Google
+      </button>
+
+      <p class="signup-prompt">
+        New to MedFlow?
+        <button class="link-btn">Create an account</button>
+      </p>
+
+      <div class="card-footer">
+        <span class="footer-item">🔒 SECURE LOGIN</span>
+        <span class="footer-item">🌐 EN – US</span>
+      </div>
+    </div>
+  </div>
+</div>

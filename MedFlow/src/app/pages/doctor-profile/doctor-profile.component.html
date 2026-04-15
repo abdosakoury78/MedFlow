@@ -1,0 +1,109 @@
+<div class="app-layout" *ngIf="doctor">
+  <!-- Desktop Sidebar -->
+  <aside class="desktop-sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-icon">➕</div>
+      <span class="sidebar-logo-text">MedFlow</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a class="sidebar-nav-item" (click)="goBack()">
+        <span class="sidebar-nav-icon">🏠</span> Home
+      </a>
+      <a class="sidebar-nav-item">
+        <span class="sidebar-nav-icon">📅</span> Appointments
+      </a>
+      <a class="sidebar-nav-item active">
+        <span class="sidebar-nav-icon">🔍</span> Find Doctor
+      </a>
+      <a routerLink="/profile" class="sidebar-nav-item">
+        <span class="sidebar-nav-icon">👤</span> My Profile
+      </a>
+    </nav>
+    <div class="sidebar-user">
+      <div class="sidebar-user-avatar">👤</div>
+      <div class="sidebar-user-info">
+        <div class="sidebar-user-name">Ahmed</div>
+        <div class="sidebar-user-role">Patient</div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main-content">
+    <div class="page-container">
+
+      <!-- Header -->
+      <div class="page-header">
+        <button class="back-btn" (click)="goBack()">←</button>
+        <h2 class="page-title">Doctor Profile</h2>
+        <button class="more-btn">⋮</button>
+      </div>
+
+      <!-- Hero -->
+      <div class="doc-hero">
+        <div class="doc-hero-avatar">{{ doctor.avatar }}</div>
+        <div class="online-dot" [class.online]="doctor.isOnline"></div>
+        <h2 class="doc-hero-name">{{ doctor.name }}</h2>
+        <p class="doc-hero-spec">{{ doctor.specialty }}</p>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-row">
+        <div class="stat-item">
+          <div class="stat-value primary">{{ doctor.rating }}</div>
+          <div class="stat-label">RATING</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value accent">{{ doctor.experience }}+</div>
+          <div class="stat-label">EXP. YEARS</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">{{ doctor.patients }}</div>
+          <div class="stat-label">PATIENTS</div>
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div class="doc-content">
+
+        <!-- About -->
+        <section class="doc-section">
+          <h3 class="doc-section-title">About Doctor</h3>
+          <p class="doc-bio">{{ doctor.bio }}</p>
+        </section>
+
+        <!-- Specialties -->
+        <section class="doc-section">
+          <h3 class="doc-section-title">Specialties</h3>
+          <div class="specialties-wrap">
+            <span class="specialty-tag" *ngFor="let spec of doctor.specialties">{{ spec }}</span>
+          </div>
+        </section>
+
+        <!-- Working Hours -->
+        <section class="doc-section">
+          <h3 class="doc-section-title">
+            <span class="clock-icon">🕐</span> Working Hours
+          </h3>
+          <div class="hours-list">
+            <div class="hours-row" *ngFor="let wh of doctor.workingHours">
+              <span class="hours-days">{{ wh.days }}</span>
+              <span class="hours-time">{{ wh.hours }}</span>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+    <!-- Footer CTA -->
+    <div class="cta-footer">
+      <div class="fee-info">
+        <div class="fee-label">CONSULTATION FEE</div>
+        <div class="fee-amount">${{ doctor.consultationFee }}.00</div>
+      </div>
+      <button class="btn-primary book-btn" (click)="bookAppointment()">Book Appointment</button>
+    </div>
+
+    <app-navbar activePage="search"></app-navbar>
+  </div>
+</div>

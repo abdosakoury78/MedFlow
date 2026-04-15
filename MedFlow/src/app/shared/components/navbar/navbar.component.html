@@ -1,0 +1,18 @@
+<nav class="bottom-nav">
+  <a routerLink="/home" class="bottom-nav-item" [class.active]="activePage === 'home'">
+    <div class="nav-icon-wrap">🏠</div>
+    <span>Home</span>
+  </a>
+  <a routerLink="/home" class="bottom-nav-item" [class.active]="activePage === 'appointments'">
+    <div class="nav-icon-wrap">📅</div>
+    <span>Appointments</span>
+  </a>
+  <a routerLink="/home" class="bottom-nav-item" [class.active]="activePage === 'search'">
+    <div class="nav-icon-wrap">🔍</div>
+    <span>Search</span>
+  </a>
+  <a routerLink="/profile" class="bottom-nav-item" [class.active]="activePage === 'profile'">
+    <div class="nav-icon-wrap">👤</div>
+    <span>Profile</span>
+  </a>
+</nav>

@@ -1,0 +1,362 @@
+/* ===== BOOK APPOINTMENT PAGE ===== */
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+}
+
+.back-btn {
+  width: 40px;
+  height: 40px;
+  background: var(--bg-muted);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.back-btn:hover {
+  background: var(--border);
+}
+
+.page-title {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.book-content {
+  padding: 0 20px 180px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Doctor mini card */
+.doctor-mini-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.mini-avatar {
+  width: 64px;
+  height: 64px;
+  background: var(--bg-muted);
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.mini-avatar::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 12px;
+  height: 12px;
+  background: var(--accent);
+  border-radius: 50%;
+  border: 2px solid white;
+}
+
+.mini-info {}
+
+.mini-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 3px;
+}
+
+.mini-spec {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 3px;
+}
+
+.mini-rating {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* Calendar */
+.cal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.cal-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.cal-month-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-arrow {
+  width: 28px;
+  height: 28px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+
+.nav-arrow:hover {
+  background: var(--bg-muted);
+}
+
+.cal-month {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--primary);
+  min-width: 120px;
+  text-align: center;
+}
+
+.calendar {
+  padding: 12px;
+}
+
+.weekdays-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 8px;
+}
+
+.weekday {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  padding: 6px 0;
+}
+
+.days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.day-btn {
+  aspect-ratio: 1;
+  background: none;
+  border: none;
+  border-radius: 50%;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: all 0.15s ease;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.day-btn:hover:not(.selected):not(.grayed) {
+  background: var(--bg-muted);
+}
+
+.day-btn.selected {
+  background: var(--primary);
+  color: white;
+  font-weight: 700;
+}
+
+.day-btn.weekend {
+  color: var(--text-muted);
+}
+
+.day-btn.grayed {
+  color: var(--text-muted);
+  cursor: default;
+}
+
+.day-btn.has-slot {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.slot-dot {
+  width: 4px;
+  height: 4px;
+  background: var(--accent);
+  border-radius: 50%;
+  position: absolute;
+  bottom: 4px;
+}
+
+/* Time Slots */
+.slots-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 14px;
+}
+
+.slots-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.slot-btn {
+  padding: 14px 8px;
+  background: var(--bg-card);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.slot-btn:hover:not(.unavailable):not(.selected) {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.slot-btn.selected {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+  font-weight: 600;
+}
+
+.slot-btn.unavailable {
+  color: var(--text-muted);
+  background: var(--bg-muted);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Info Banner */
+.info-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: rgba(26, 122, 110, 0.08);
+  border: 1px solid rgba(26, 122, 110, 0.2);
+  border-radius: var(--radius-md);
+  padding: 14px;
+}
+
+.info-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.info-text {
+  font-size: 13px;
+  color: var(--accent);
+  line-height: 1.5;
+}
+
+/* Confirm Footer */
+.confirm-footer {
+  position: fixed;
+  bottom: var(--nav-height);
+  left: 0;
+  right: 0;
+  background: var(--bg-card);
+  border-top: 1px solid var(--border);
+  padding: 14px 20px;
+  z-index: 50;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
+}
+
+.confirm-details {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.confirm-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+
+.confirm-value {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.confirm-value.primary {
+  font-family: var(--font-display);
+  font-size: 20px;
+  color: var(--primary);
+}
+
+.confirm-btn {
+  border-radius: var(--radius-xl);
+  padding: 15px;
+}
+
+/* ===== DESKTOP ===== */
+@media (min-width: 1024px) {
+  .book-content {
+    padding: 0 40px 140px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px 40px;
+    align-items: start;
+  }
+
+  .doctor-mini-card {
+    grid-column: 1 / -1;
+  }
+
+  .calendar-section {
+    grid-column: 1;
+  }
+
+  .slots-section {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .info-banner {
+    grid-column: 2;
+    grid-row: 3;
+  }
+
+  .confirm-footer {
+    left: 280px;
+    bottom: 0;
+  }
+}

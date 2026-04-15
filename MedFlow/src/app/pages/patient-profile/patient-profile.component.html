@@ -1,0 +1,114 @@
+<div class="app-layout">
+  <!-- Desktop Sidebar -->
+  <aside class="desktop-sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-icon">➕</div>
+      <span class="sidebar-logo-text">MedFlow</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a routerLink="/home" class="sidebar-nav-item">
+        <span class="sidebar-nav-icon">🏠</span> Home
+      </a>
+      <a routerLink="/home" class="sidebar-nav-item">
+        <span class="sidebar-nav-icon">📅</span> Appointments
+      </a>
+      <a routerLink="/home" class="sidebar-nav-item">
+        <span class="sidebar-nav-icon">🔍</span> Find Doctor
+      </a>
+      <a routerLink="/profile" class="sidebar-nav-item active">
+        <span class="sidebar-nav-icon">👤</span> My Profile
+      </a>
+      <a class="sidebar-nav-item">
+        <span class="sidebar-nav-icon">📋</span> My Records
+      </a>
+    </nav>
+    <div class="sidebar-user">
+      <div class="sidebar-user-avatar">👤</div>
+      <div class="sidebar-user-info">
+        <div class="sidebar-user-name">Ahmed</div>
+        <div class="sidebar-user-role">Patient</div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main-content">
+    <div class="page-container">
+
+      <!-- Mobile Header -->
+      <header class="mobile-header">
+        <div class="header-brand">
+          <span class="header-logo-icon">➕</span>
+          <span class="header-logo-text">MedFlow</span>
+        </div>
+        <button class="notif-btn">🔔</button>
+      </header>
+
+      <!-- Profile Hero -->
+      <div class="profile-hero">
+        <div class="avatar-wrap">
+          <div class="profile-avatar">{{ patient.avatar }}</div>
+          <button class="edit-avatar-btn">✏️</button>
+        </div>
+        <h2 class="profile-name">{{ patient.name }}</h2>
+        <p class="profile-email">{{ patient.email }}</p>
+        <div class="profile-meta">
+          <span class="meta-item">📞 {{ patient.phone }}</span>
+          <span class="meta-sep">•</span>
+          <span class="meta-item">📍 {{ patient.location }}</span>
+        </div>
+      </div>
+
+      <div class="profile-content">
+
+        <!-- Medical Baseline -->
+        <section class="section">
+          <h3 class="section-title">Medical Baseline</h3>
+          <div class="baseline-grid">
+            <div class="baseline-card">
+              <div class="baseline-label">AGE</div>
+              <div class="baseline-value primary">{{ patient.age }}</div>
+            </div>
+            <div class="baseline-card">
+              <div class="baseline-label">BLOOD</div>
+              <div class="baseline-value accent">{{ patient.blood }}</div>
+            </div>
+            <div class="baseline-card">
+              <div class="baseline-label">GENDER</div>
+              <div class="baseline-value">{{ patient.gender }}</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Appointment History -->
+        <section class="section">
+          <div class="section-header">
+            <h3 class="section-title">Appointment History</h3>
+            <button class="view-all-link">View All</button>
+          </div>
+          <div class="history-list">
+            <div class="history-card card" *ngFor="let appt of appointmentHistory">
+              <div class="history-icon" [style.background]="appt.iconBg">
+                {{ appt.icon }}
+              </div>
+              <div class="history-info">
+                <div class="history-name">{{ appt.specialty }}</div>
+                <div class="history-meta">{{ appt.clinic }} • {{ appt.date }}</div>
+              </div>
+              <span class="badge badge-success">{{ appt.status }}</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Action Buttons -->
+        <section class="section">
+          <button class="btn-primary edit-btn">Edit Profile</button>
+          <div style="height: 12px"></div>
+          <button class="btn-secondary logout-btn" (click)="logout()">Logout</button>
+        </section>
+
+      </div>
+    </div>
+
+    <app-navbar activePage="profile"></app-navbar>
+  </div>
+</div>

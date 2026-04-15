@@ -1,0 +1,161 @@
+<div class="app-layout">
+  <!-- Desktop Sidebar -->
+  <aside class="desktop-sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-icon">➕</div>
+      <span class="sidebar-logo-text">MedFlow</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a routerLink="/home" class="sidebar-nav-item active">
+        <span class="sidebar-nav-icon">🏠</span> Home
+      </a>
+      <a routerLink="/home" class="sidebar-nav-item">
+        <span class="sidebar-nav-icon">📅</span> Appointments
+      </a>
+      <a routerLink="/home" class="sidebar-nav-item">
+        <span class="sidebar-nav-icon">🔍</span> Find Doctor
+      </a>
+      <a routerLink="/profile" class="sidebar-nav-item">
+        <span class="sidebar-nav-icon">👤</span> My Profile
+      </a>
+      <a routerLink="/home" class="sidebar-nav-item">
+        <span class="sidebar-nav-icon">📋</span> My Records
+      </a>
+    </nav>
+    <div class="sidebar-user">
+      <div class="sidebar-user-avatar">👤</div>
+      <div class="sidebar-user-info">
+        <div class="sidebar-user-name">Ahmed</div>
+        <div class="sidebar-user-role">Patient</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="page-container">
+
+      <!-- Mobile Header -->
+      <header class="mobile-header">
+        <div class="header-left">
+          <div class="header-avatar">👤</div>
+          <span class="header-logo">MedFlow</span>
+        </div>
+        <button class="notif-btn">🔔</button>
+      </header>
+
+      <!-- Desktop Top Bar -->
+      <div class="desktop-topbar">
+        <div class="topbar-greeting">
+          <span class="topbar-sub">Good morning,</span>
+          <h1 class="topbar-name">Ahmed</h1>
+        </div>
+        <div class="topbar-actions">
+          <button class="topbar-notif">🔔</button>
+          <button class="topbar-notif" (click)="navigateToProfile()">👤</button>
+        </div>
+      </div>
+
+      <!-- Hero Banner -->
+      <div class="hero-banner">
+        <div class="hero-text">
+          <p class="hero-greeting">Good morning,</p>
+          <h2 class="hero-name">Ahmed</h2>
+          <p class="hero-date">Monday, Oct 23rd, 2023</p>
+        </div>
+      </div>
+
+      <div class="content-wrap">
+
+        <!-- Upcoming Appointments -->
+        <section class="section">
+          <div class="section-header">
+            <h3 class="section-title">Upcoming Appointments</h3>
+            <button class="view-all-link">View All</button>
+          </div>
+          <div class="appointments-list">
+            <div
+              class="appointment-card card"
+              *ngFor="let appt of upcomingAppointments"
+              (click)="navigateToDoctor(appt.id)"
+            >
+              <div class="appt-avatar">{{ appt.avatar }}</div>
+              <div class="appt-info">
+                <div class="appt-name">{{ appt.doctor }}</div>
+                <div class="appt-meta">{{ appt.specialty }} • {{ appt.time }}</div>
+              </div>
+              <span class="appt-arrow">›</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Quick Actions -->
+        <section class="section">
+          <h3 class="section-title">Quick Actions</h3>
+          <div class="quick-actions-grid">
+            <button class="quick-action-btn" (click)="navigateToDoctor(1)">
+              <div class="qa-icon">📅</div>
+              <span>Book Visit</span>
+            </button>
+            <button class="quick-action-btn" (click)="navigateToProfile()">
+              <div class="qa-icon">👤</div>
+              <span>My Profile</span>
+            </button>
+            <button class="quick-action-btn" (click)="navigateToDoctor(1)">
+              <div class="qa-icon">🔍</div>
+              <span>Find Doctor</span>
+            </button>
+            <button class="quick-action-btn">
+              <div class="qa-icon">📁</div>
+              <span>My Records</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- Doctors Section (Desktop bonus) -->
+        <section class="section desktop-only-section">
+          <div class="section-header">
+            <h3 class="section-title">Top Specialists</h3>
+            <button class="view-all-link">View All</button>
+          </div>
+          <div class="doctors-grid">
+            <div
+              class="doctor-card card"
+              *ngFor="let doc of doctors"
+              (click)="navigateToDoctor(doc.id)"
+            >
+              <div class="doc-avatar">{{ doc.avatar }}</div>
+              <div class="doc-info">
+                <div class="doc-name">{{ doc.name }}</div>
+                <div class="doc-spec">{{ doc.specialty }}</div>
+                <div class="doc-meta">
+                  <span class="doc-rating">⭐ {{ doc.rating }}</span>
+                  <span class="doc-exp">{{ doc.experience }}+ yrs</span>
+                </div>
+              </div>
+              <div class="doc-fee">${{ doc.consultationFee }}</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Daily Insight -->
+        <section class="section">
+          <div class="insight-card card">
+            <div class="insight-label">{{ dailyInsight.label }}</div>
+            <div class="insight-content">
+              <div class="insight-text">
+                <h4 class="insight-title">{{ dailyInsight.title }}</h4>
+                <p class="insight-body">{{ dailyInsight.body }}</p>
+              </div>
+              <div class="insight-emoji">{{ dailyInsight.emoji }}</div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+    <!-- Mobile Bottom Nav -->
+    <app-navbar activePage="home"></app-navbar>
+  </div>
+</div>
