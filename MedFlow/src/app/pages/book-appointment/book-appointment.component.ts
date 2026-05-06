@@ -3,63 +3,169 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { DOCTORS, Doctor, TIME_SLOTS, TimeSlot } from '../../shared/models/data';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
-
-interface CalendarDay {
-  day: number | null;
-  hasSlot?: boolean;
-  isWeekend?: boolean;
-}
+import { SidebarComponent } from '../../shared/components/sidebar/sidebar.component';
+import { AlertComponent } from '../../shared/components/alert/alert.component';
 
 @Component({
   selector: 'app-book-appointment',
   standalone: true,
-  imports: [CommonModule, NavbarComponent],
+  imports: [CommonModule, NavbarComponent, SidebarComponent, AlertComponent],
   templateUrl: './book-appointment.component.html',
   styleUrls: ['./book-appointment.component.css']
 })
 export class BookAppointmentComponent implements OnInit {
-  doctor: Doctor | undefined;
+
+  doctor?: Doctor;
+
   timeSlots: TimeSlot[] = TIME_SLOTS;
-  selectedSlot: string = '11:00 AM';
-  selectedDay: number = 9;
-  currentMonth: string = 'OCTOBER 2024';
-  confirmed: boolean = false;
 
-  weekdays: string[] = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
+  selectedSlot: string = '';
+  selectedDay: number | null = null;
 
-  calendarDays: CalendarDay[] = [
-    { day: 30, isWeekend: false }, { day: 1 }, { day: 2 }, { day: 3 }, { day: 4 }, { day: 5, isWeekend: true }, { day: 6, isWeekend: true },
-    { day: 7 }, { day: 8 }, { day: 9 }, { day: 10 }, { day: 11, hasSlot: true }, { day: 12, isWeekend: true }, { day: 13, isWeekend: true },
-    { day: 14 }, { day: 15 }, { day: 16 }, { day: 17 }, { day: 18, hasSlot: true }, { day: 19, isWeekend: true }, { day: 20, isWeekend: true }
-  ];
+  currentDate = new Date();
+  today = new Date();
+
+  currentMonth = '';
+  calendarDays: number[] = [];
+
+  weekdays = ['MO','TU','WE','TH','FR','SA','SU'];
+
+  confirmed = false;
+
+  alertVisible = false;
+  alertMessage = '';
+  alertType: 'success' | 'error' | 'warning' | 'info' = 'success';
 
   constructor(private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
-    this.doctor = DOCTORS.find(d => d.id === id) ?? DOCTORS[0];
+    this.doctor = DOCTORS.find(d => d.id === id);
+
+    this.generateCalendar();
   }
 
-  selectDay(day: number | null): void {
-    if (day && day !== 30) {
-      this.selectedDay = day;
+  /* ===== CALENDAR ===== */
+
+  generateCalendar() {
+    const year = this.currentDate.getFullYear();
+    const month = this.currentDate.getMonth();
+
+    this.currentMonth = this.currentDate.toLocaleString('default', {
+      month: 'long',
+      year: 'numeric'
+    });
+
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    this.calendarDays = Array.from({ length: daysInMonth }, (_, i) => i + 1);
+
+    // auto select today if same month
+    if (
+      this.today.getMonth() === month &&
+      this.today.getFullYear() === year
+    ) {
+      this.selectedDay = this.today.getDate();
+    } else {
+      this.selectedDay = 1;
     }
   }
 
-  selectSlot(slot: TimeSlot): void {
-    if (slot.available) {
-      this.selectedSlot = slot.time;
-    }
+  nextMonth() {
+    this.currentDate.setMonth(this.currentDate.getMonth() + 1);
+    this.generateCalendar();
   }
 
-  confirmBooking(): void {
+  prevMonth(): void {
+    const today = new Date();
+
+    const currentYear = this.currentDate.getFullYear();
+    const currentMonth = this.currentDate.getMonth();
+
+    const todayYear = today.getFullYear();
+    const todayMonth = today.getMonth();
+
+    // 🚫 Prevent going to past month
+    if (
+      currentYear < todayYear ||
+      (currentYear === todayYear && currentMonth <= todayMonth)
+    ) {
+      return;
+    }
+
+    this.currentDate.setMonth(this.currentDate.getMonth() - 1);
+    this.generateCalendar();
+  }
+
+  /* ===== HELPERS ===== */
+
+  isPastDay(day: number): boolean {
+    const date = new Date(
+      this.currentDate.getFullYear(),
+      this.currentDate.getMonth(),
+      day
+    );
+
+    const today = new Date(this.today);
+    today.setHours(0,0,0,0);
+
+    return date < today;
+  }
+
+  isPastMonth(): boolean {
+    const today = new Date();
+
+    return (
+      this.currentDate.getFullYear() === today.getFullYear() &&
+      this.currentDate.getMonth() === today.getMonth()
+    );
+  }
+
+  /* ===== SELECTION ===== */
+
+  selectDay(day: number) {
+    if (this.isPastDay(day)) return;
+    this.selectedDay = day;
+  }
+
+  selectSlot(slot: TimeSlot) {
+    if (!slot.available) return;
+    this.selectedSlot = slot.time;
+  }
+
+  /* ===== ACTIONS ===== */
+
+  confirmBooking() {
+    if (!this.selectedDay || !this.selectedSlot) {
+      this.showAlert('Please select date and time first', 'warning');
+      return;
+    }
+
     this.confirmed = true;
+
+    this.showAlert('Appointment booked successfully 🎉', 'success');
+
     setTimeout(() => {
       this.router.navigate(['/home']);
     }, 2000);
   }
 
-  goBack(): void {
+  goBack() {
     this.router.navigate(['/doctor', this.doctor?.id]);
+  }
+
+  showAlert(message: string, type: any) {
+    this.alertMessage = message;
+    this.alertType = type;
+    this.alertVisible = true;
+
+    // auto hide after 3 sec
+    setTimeout(() => {
+      this.alertVisible = false;
+    }, 3000);
+  }
+
+  onAlertClose() {
+    this.alertVisible = false;
   }
 }

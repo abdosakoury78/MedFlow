@@ -1,0 +1,62 @@
+<div class="app-layout">
+
+  <app-sidebar></app-sidebar>
+
+  <div class="main-content">
+
+    <div class="page-content">
+
+      <header class="page-header">
+        <div>
+          <h1>Find Doctor</h1>
+          <p>Search and book the best specialists</p>
+        </div>
+      </header>
+
+      <div class="search-section">
+        <div class="search-box">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input
+            type="text"
+            placeholder="Search doctors, specialties..."
+            [(ngModel)]="searchTerm"
+            (input)="filterDoctors()"
+          />
+        </div>
+
+        <div class="filters">
+          <button
+            class="filter-btn"
+            *ngFor="let spec of specialties"
+            [class.active]="selectedSpecialty === spec"
+            (click)="selectSpecialty(spec)"
+          >
+            {{ spec }}
+          </button>
+        </div>
+      </div>
+
+      <div class="doctors-grid">
+
+        <div class="doctor-card card" *ngFor="let doc of filteredDoctors">
+
+          <div class="doc-avatar">{{ doc.avatar }}</div>
+
+          <div class="doc-info">
+            <h3>{{ doc.name }}</h3>
+            <p class="specialty">{{ doc.specialty }}</p>
+            <div class="meta">⭐ {{ doc.rating }} • {{ doc.experience }} yrs</div>
+            <div class="fee">${{ doc.fee }} consultation</div>
+          </div>
+
+          <button class="book-btn" (click)="bookDoctor(doc.id)">
+            Book Appointment
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>

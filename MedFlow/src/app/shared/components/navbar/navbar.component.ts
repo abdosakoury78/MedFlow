@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -11,4 +11,7 @@ import { CommonModule } from '@angular/common';
 })
 export class NavbarComponent {
   @Input() activePage: 'home' | 'appointments' | 'search' | 'profile' = 'home';
+
+  constructor(private router : Router) {}
+
 }

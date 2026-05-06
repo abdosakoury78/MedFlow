@@ -52,7 +52,9 @@
         <!-- Appointments -->
         <section class="section">
           <h3 class="section-title">Upcoming Appointments</h3>
-
+          <a class="view-more-link" routerLink="/appointments">
+            View More <i class="fa-solid fa-arrow-right"></i>
+          </a>
           <div class="appointments-list">
             <div
               class="appointment-card card"
@@ -91,6 +93,11 @@
             <button class="quick-action-btn" (click)="navigateToDoctor(1)">
               <div class="qa-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
               <span>Find Doctor</span>
+            </button>
+
+            <button class="quick-action-btn">
+              <div class="qa-icon"><i class="fa-solid fa-file"></i></div>
+              <span>My Records</span>
             </button>
           </div>
         </section>

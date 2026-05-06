@@ -447,3 +447,20 @@
   background: var(--border);
   border-radius: 10px;
 }
+
+.view-more-link {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--primary);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 12px;
+  transition: 0.2s;
+}
+
+.view-more-link:hover {
+  transform: translateX(2px);
+  opacity: 0.8;
+}

@@ -11,24 +11,35 @@
   <!-- Navigation -->
   <nav class="sidebar-nav">
 
-    <a routerLink="/home" class="sidebar-nav-item active">
+    <a
+      routerLink="/home"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      class="sidebar-nav-item"
+    >
       <i class="fa-solid fa-house sidebar-nav-icon"></i>
       Home
     </a>
 
-    <a routerLink="/appointments" class="sidebar-nav-item">
+    <a routerLink="/appointments" class="sidebar-nav-item" routerLinkActive="active">
       <i class="fa-solid fa-calendar sidebar-nav-icon"></i>
       Appointments
     </a>
 
-    <a routerLink="/doctors" class="sidebar-nav-item">
+    <a routerLink="/doctors" class="sidebar-nav-item" routerLinkActive="active">
       <i class="fa-solid fa-magnifying-glass sidebar-nav-icon"></i>
       Find Doctor
     </a>
 
-    <a routerLink="/profile" class="sidebar-nav-item">
+    <a routerLink="/profile" class="sidebar-nav-item" routerLinkActive="active">
       <i class="fa-solid fa-user sidebar-nav-icon"></i>
       My Profile
+    </a>
+    <a class="sidebar-nav-item logout-item mb-2" (click)="logout()">
+      <span class="sidebar-nav-icon">
+        <i class="fa-solid fa-right-from-bracket"></i>
+      </span>
+      Logout
     </a>
 
   </nav>

@@ -102,3 +102,13 @@
     display: flex;
   }
 }
+
+.logout-item {
+  margin-top: auto;
+  color: #ef4444;
+}
+
+.logout-item:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}

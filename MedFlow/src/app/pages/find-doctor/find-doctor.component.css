@@ -1,0 +1,229 @@
+/* ===== Layout ===== */
+.app-layout {
+  display: flex;
+  height: 100vh;
+  overflow: hidden; /* lock body scroll */
+  background: var(--bg);
+}
+
+/* Main container */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;   /* IMPORTANT */
+  overflow: hidden;
+}
+
+/* ✅ THIS is the ONLY scroll area */
+.page-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 20px;
+
+  /* smooth scrolling */
+  scroll-behavior: smooth;
+}
+
+/* Optional: nicer scrollbar */
+.page-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.page-content::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 10px;
+}
+
+.page-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+/* ===== Header ===== */
+.page-header h1 {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.page-header p {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* ===== Search ===== */
+.search-section {
+  margin-top: 18px;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+
+  padding: 12px 14px;
+  box-shadow: var(--shadow-sm);
+}
+
+.search-box i {
+  color: var(--text-muted);
+}
+
+.search-box input {
+  border: none;
+  outline: none;
+  width: 100%;
+  background: transparent;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+/* ===== Filters ===== */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.filter-btn {
+  padding: 8px 14px;
+  border-radius: 999px;
+
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+
+  font-size: 13px;
+  color: var(--text-secondary);
+
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.filter-btn:hover {
+  background: var(--bg-muted);
+  color: var(--text-primary);
+}
+
+.filter-btn.active {
+  background: rgba(155, 58, 42, 0.12);
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+/* ===== Doctors Grid ===== */
+.doctors-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+
+/* ===== Doctor Card ===== */
+.doctor-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+
+  padding: 16px;
+  border-radius: var(--radius-md);
+
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+
+  box-shadow: var(--shadow-sm);
+  transition: 0.25s ease;
+}
+
+.doctor-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Avatar */
+.doc-avatar {
+  width: 52px;
+  height: 52px;
+
+  border-radius: 50%;
+  background: var(--bg-muted);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 22px;
+}
+
+/* Info */
+.doc-info {
+  flex: 1;
+}
+
+.doc-info h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.specialty {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.meta {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+.fee {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--primary);
+  margin-top: 6px;
+}
+
+/* Book Button */
+.book-btn {
+  padding: 8px 14px;
+
+  border: none;
+  border-radius: var(--radius-sm);
+
+  background: var(--primary);
+  color: white;
+
+  font-weight: 600;
+  font-size: 13px;
+
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.book-btn:hover {
+  background: var(--primary-dark);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .page-content {
+    padding: 16px;
+  }
+
+  .doctor-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .book-btn {
+    width: 100%;
+  }
+}

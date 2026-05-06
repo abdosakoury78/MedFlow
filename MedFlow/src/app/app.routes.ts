@@ -17,6 +17,17 @@ export const routes: Routes = [
       import('./pages/home/home.component').then(m => m.HomeComponent)
   },
   {
+    path: 'appointments',
+    loadComponent() {
+      return import('./pages/appointments/appointments.component').then(m => m.AppointmentsComponent);
+    },
+  },
+  {
+    path: 'doctors',
+    loadComponent: () =>
+      import('./pages/find-doctor/find-doctor.component').then(m => m.FindDoctorComponent)
+  },
+  {
     path: 'doctor/:id',
     loadComponent: () =>
       import('./pages/doctor-profile/doctor-profile.component').then(m => m.DoctorProfileComponent)

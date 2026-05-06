@@ -1,0 +1,102 @@
+<div class="app-layout">
+
+  <app-sidebar></app-sidebar>
+
+  <div class="main-content">
+
+    <!-- Header -->
+    <header class="page-header p-5">
+      <div>
+        <h2>My Appointments</h2>
+        <p class="sub">Manage your upcoming and past visits</p>
+      </div>
+
+      <button class="add-btn" routerLink="/doctors">
+        <i class="fa-solid fa-plus"></i>
+        New
+      </button>
+    </header>
+
+    <!-- Content -->
+    <div class="page-content">
+
+      <!-- Today -->
+      <div class="day-group">
+        <h3 class="day-title">Today</h3>
+
+        <div class="appointment-card" *ngFor="let appt of todayAppointments">
+
+          <div class="time-box">
+            <span class="time">{{ appt.time }}</span>
+            <span class="duration">{{ appt.duration }} min</span>
+          </div>
+
+          <div class="info">
+            <div class="doctor">
+              <div class="avatar">{{ appt.avatar }}</div>
+              <div>
+                <h4>{{ appt.doctor }}</h4>
+                <p>{{ appt.specialty }}</p>
+              </div>
+            </div>
+
+            <div class="meta">
+              <span><i class="fa-solid fa-location-dot"></i> {{ appt.clinic }}</span>
+            </div>
+          </div>
+
+          <div class="status me-3" [ngClass]="appt.status">
+            {{ appt.status }}
+          </div>
+
+          <div class="actions">
+            @if(appt.status === 'upcoming') {
+                <button><i class="fa-solid fa-pen"></i></button>
+            }
+            <button class="danger"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Upcoming -->
+      <div class="day-group">
+        <h3 class="day-title">Upcoming</h3>
+
+        <div class="appointment-card" *ngFor="let appt of upcomingAppointments">
+
+          <div class="time-box">
+            <span class="time">{{ appt.date }}</span>
+            <span class="duration">{{ appt.time }}</span>
+          </div>
+
+          <div class="info">
+            <div class="doctor">
+              <div class="avatar">{{ appt.avatar }}</div>
+              <div>
+                <h4>{{ appt.doctor }}</h4>
+                <p>{{ appt.specialty }}</p>
+              </div>
+            </div>
+
+            <div class="meta">
+              <span><i class="fa-solid fa-location-dot"></i> {{ appt.clinic }}</span>
+            </div>
+          </div>
+
+          <div class="status upcoming me-3">
+            upcoming
+          </div>
+
+          <div class="actions">
+            <button><i class="fa-solid fa-calendar"></i></button>
+            <button class="danger"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>

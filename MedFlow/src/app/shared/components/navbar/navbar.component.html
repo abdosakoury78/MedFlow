@@ -1,8 +1,10 @@
 <nav class="bottom-nav">
 
   <a routerLink="/home"
-     class="bottom-nav-item"
-     [class.active]="activePage === 'home'">
+     routerLinkActive="active"
+     [routerLinkActiveOptions]="{ exact: true }"
+     class="bottom-nav-item">
+
     <div class="nav-icon-wrap">
       <i class="fa-solid fa-house"></i>
     </div>
@@ -10,8 +12,9 @@
   </a>
 
   <a routerLink="/appointments"
-     class="bottom-nav-item"
-     [class.active]="activePage === 'appointments'">
+     routerLinkActive="active"
+     class="bottom-nav-item">
+
     <div class="nav-icon-wrap">
       <i class="fa-solid fa-calendar"></i>
     </div>
@@ -19,8 +22,9 @@
   </a>
 
   <a routerLink="/search"
-     class="bottom-nav-item"
-     [class.active]="activePage === 'search'">
+     routerLinkActive="active"
+     class="bottom-nav-item">
+
     <div class="nav-icon-wrap">
       <i class="fa-solid fa-magnifying-glass"></i>
     </div>
@@ -28,8 +32,9 @@
   </a>
 
   <a routerLink="/profile"
-     class="bottom-nav-item"
-     [class.active]="activePage === 'profile'">
+     routerLinkActive="active"
+     class="bottom-nav-item">
+
     <div class="nav-icon-wrap">
       <i class="fa-solid fa-user"></i>
     </div>
