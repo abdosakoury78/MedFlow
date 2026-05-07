@@ -1,15 +1,15 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
-import { DOCTORS, Doctor } from '../../shared/models/data';
+import { DOCTORS, Doctor, UPCOMING_APPOINTMENTS, UpcomingAppointment } from '../../shared/models/data';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
 import { SidebarComponent } from '../../shared/components/sidebar/sidebar.component';
+import { NotificationComponent } from '../../shared/components/notification/notification.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterLink, NavbarComponent, SidebarComponent],
+  imports: [CommonModule, NavbarComponent, SidebarComponent, NotificationComponent],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
@@ -17,31 +17,9 @@ export class HomeComponent {
 
   doctors: Doctor[] = DOCTORS;
 
-  today = new Date().toDateString();
+  today = new Date();
 
-  upcomingAppointments = [
-    {
-      doctor: 'Dr. Sarah Jenkins',
-      specialty: 'Cardiology',
-      time: '09:30 AM',
-      avatar: '👩‍⚕️',
-      id: 2
-    },
-    {
-      doctor: 'Dr. Michael Chen',
-      specialty: 'General Health',
-      time: '02:15 PM',
-      avatar: '🧑‍⚕️',
-      id: 3
-    }
-  ];
-
-  dailyInsight = {
-    label: 'DAILY INSIGHT',
-    title: 'Hydration increases cognitive focus by 14%',
-    body: 'Remember to drink at least 2 liters of water today.',
-    emoji: '💧'
-  };
+  upcomingAppointments: UpcomingAppointment[] = UPCOMING_APPOINTMENTS;
 
   constructor(private router: Router) {}
 
@@ -51,5 +29,19 @@ export class HomeComponent {
 
   navigateToProfile(): void {
     this.router.navigate(['/profile']);
+  }
+
+  goToAppointment(doctorId: number): void {
+    this.router.navigate(['/doctor', doctorId]);
+  }
+
+  showNotifications = false;
+
+  toggleNotifications(): void {
+    this.showNotifications = !this.showNotifications;
+  }
+
+  closeNotifications(): void {
+    this.showNotifications = false;
   }
 }

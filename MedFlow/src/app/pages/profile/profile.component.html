@@ -1,0 +1,120 @@
+<div class="app-layout">
+
+  <!-- Sidebar -->
+  <app-sidebar></app-sidebar>
+
+  <!-- Main -->
+  <div class="main-content">
+
+    <!-- Scroll area -->
+    <div class="page-container">
+
+      <!-- Header -->
+      <header class="page-header">
+
+        <button class="icon-btn" (click)="goBack()">
+          <i class="fa-solid fa-arrow-left"></i>
+        </button>
+
+        <h2 class="page-title">Doctor Profile</h2>
+
+        <button class="icon-btn">
+          <i class="fa-solid fa-pen"></i>
+        </button>
+
+      </header>
+
+      <!-- Profile Hero -->
+      <section class="profile-hero">
+
+        <div class="avatar-wrapper">
+          <div class="avatar">{{ doctor.avatar }}</div>
+          <span class="status-dot" [class.online]="doctor.isOnline"></span>
+        </div>
+
+        <h2 class="name">{{ doctor.name }}</h2>
+        <p class="specialty">{{ doctor.specialty }}</p>
+
+        <div class="rating">
+          ⭐ {{ doctor.rating }} ({{ doctor.reviews }} reviews)
+        </div>
+
+      </section>
+
+      <!-- Stats -->
+      <section class="stats">
+
+        <div class="stat">
+          <h3>{{ doctor.experience }}+</h3>
+          <p>Years</p>
+        </div>
+
+        <div class="stat">
+          <h3>{{ doctor.patientsCount }}</h3>
+          <p>Patients</p>
+        </div>
+
+        <div class="stat">
+          <h3>${{ doctor.consultationFee }}</h3>
+          <p>Fee</p>
+        </div>
+
+      </section>
+
+      <!-- About -->
+      <section class="card section">
+        <h3>About</h3>
+        <p>{{ doctor.bio }}</p>
+      </section>
+
+      <!-- Specialties -->
+      <section class="card section">
+        <h3>Specialties</h3>
+        <div class="tags">
+          <span class="tag" *ngFor="let s of doctor.specialties">
+            {{ s }}
+          </span>
+        </div>
+      </section>
+
+      <!-- Working Hours -->
+      <section class="card section">
+        <h3>Working Hours</h3>
+
+        <div class="hours">
+          <div class="hour-row" *ngFor="let h of doctor.workingHours">
+            <span>{{ h.days }}</span>
+            <span>{{ h.hours }}</span>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- 🔥 Logout Card -->
+      <section class="logout-card">
+
+        <div class="logout-info">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+
+          <div>
+            <h4>Logout</h4>
+            <p>Sign out from your account safely</p>
+          </div>
+
+        </div>
+
+        <button class="logout-btn" (click)="logout()">
+          <i class="fa-solid fa-right-from-bracket"></i>
+          Logout
+        </button>
+
+      </section>
+
+    </div>
+
+    <!-- Bottom Navbar -->
+    <app-navbar [isDoctor]="true"></app-navbar>
+
+  </div>
+
+</div>

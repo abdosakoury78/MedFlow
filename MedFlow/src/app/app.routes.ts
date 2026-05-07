@@ -42,5 +42,25 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/patient-profile/patient-profile.component').then(m => m.PatientProfileComponent)
   },
+  {
+    path: 'dashboard',
+    loadComponent: () =>
+      import('./pages/doctor-dashboard/doctor-dashboard.component').then(m => m.DoctorDashboardComponent)
+  },
+  {
+    path: 'schedule',
+    loadComponent: () =>
+      import('./pages/schdule/schdule.component').then(m => m.SchduleComponent)
+  },
+  {
+    path: 'patients',
+    loadComponent: () =>
+      import('./pages/patients/patients.component').then(m => m.PatientsComponent)
+  },
+  {
+    path: 'doctor-profile',
+    loadComponent: () =>
+      import('./pages/profile/profile.component').then(m => m.ProfileComponent)
+  },
   { path: '**', redirectTo: 'login' }
 ];

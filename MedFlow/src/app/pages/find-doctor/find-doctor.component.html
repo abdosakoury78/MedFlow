@@ -46,7 +46,7 @@
             <h3>{{ doc.name }}</h3>
             <p class="specialty">{{ doc.specialty }}</p>
             <div class="meta">⭐ {{ doc.rating }} • {{ doc.experience }} yrs</div>
-            <div class="fee">${{ doc.fee }} consultation</div>
+            <div class="fee">${{ doc.consultationFee }} consultation</div>
           </div>
 
           <button class="book-btn" (click)="bookDoctor(doc.id)">

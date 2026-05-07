@@ -10,8 +10,24 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent {
-  @Input() activePage: 'home' | 'appointments' | 'search' | 'profile' = 'home';
 
-  constructor(private router : Router) {}
+  @Input() activePage:
+    | 'home'
+    | 'appointments'
+    | 'search'
+    | 'profile'
+    | 'dashboard'
+    | 'patients'
+    | 'schedule'
+    = 'home';
+
+  @Input() isDoctor: boolean = false;
+
+  constructor(private router: Router) {}
+
+  logout() {
+    localStorage.clear();
+    this.router.navigate(['/login']);
+  }
 
 }

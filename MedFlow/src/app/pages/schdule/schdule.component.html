@@ -1,0 +1,96 @@
+<div class="app-layout">
+
+  <!-- Sidebar -->
+  <app-sidebar></app-sidebar>
+
+  <!-- Main -->
+  <div class="main-content">
+
+    <!-- Scroll -->
+    <div class="page-content">
+
+      <!-- Header -->
+      <header class="page-header">
+        <div>
+          <h1>Appointments</h1>
+          <p>Manage your patients schedule</p>
+        </div>
+
+        <div class="filter-tabs">
+          <button (click)="setTab('today')" [class.active]="activeTab === 'today'">Today</button>
+          <button (click)="setTab('upcoming')" [class.active]="activeTab === 'upcoming'">Upcoming</button>
+        </div>
+      </header>
+
+      <!-- TODAY -->
+      <section *ngIf="activeTab === 'today'" class="section">
+
+        <h2 class="section-title">Today's Patients</h2>
+
+        <div class="appointments-list">
+
+          <div class="appointment-card card text-center"
+               *ngFor="let appt of todayAppointments">
+
+            <div class="avatar">{{ appt.avatar }}</div>
+
+            <div class="info">
+              <h3>{{ appt.patient }}</h3>
+              <p>{{ appt.specialty }}</p>
+
+              <div class="meta">
+                <span><i class="fa-regular fa-clock"></i> {{ appt.time }}</span>
+                <span><i class="fa-solid fa-location-dot"></i> {{ appt.clinic }}</span>
+              </div>
+            </div>
+
+            <div class="status"
+                 [ngClass]="appt.status">
+              {{ appt.status }}
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- UPCOMING -->
+      <section *ngIf="activeTab === 'upcoming'" class="section">
+
+        <h2 class="section-title">Upcoming Patients</h2>
+
+        <div class="appointments-list">
+
+          <div class="appointment-card card text-center"
+               *ngFor="let appt of upcomingAppointments">
+
+            <div class="avatar">{{ appt.avatar }}</div>
+
+            <div class="info">
+              <h3>{{ appt.patient }}</h3>
+              <p>{{ appt.specialty }}</p>
+
+              <div class="meta">
+                <span><i class="fa-regular fa-calendar"></i> {{ appt.date }}</span>
+                <span><i class="fa-regular fa-clock"></i> {{ appt.time }}</span>
+              </div>
+            </div>
+
+            <div class="status upcoming">
+              upcoming
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+    </div>
+
+    <!-- Navbar -->
+    <app-navbar [isDoctor]="true"></app-navbar>
+
+  </div>
+</div>

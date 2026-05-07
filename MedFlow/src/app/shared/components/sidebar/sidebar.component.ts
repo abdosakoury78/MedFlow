@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { SidebarUser, SIDEBAR_USER } from '../../models/data';
 
 @Component({
   selector: 'app-sidebar',
@@ -11,10 +12,8 @@ import { CommonModule } from '@angular/common';
 })
 export class SidebarComponent {
 
-  user = {
-    name: 'Ahmed',
-    role: 'Patient'
-  };
+  user: SidebarUser = SIDEBAR_USER;
+  isDoctor: boolean = true; // Set to true for testing, replace with real role check
 
   constructor(private router: Router) {}
 

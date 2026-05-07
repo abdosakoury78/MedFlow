@@ -50,7 +50,7 @@ export class LoginComponent {
       this.showAlert('Login successful!', 'success');
 
       setTimeout(() => {
-        this.router.navigate(['/home']);
+        this.router.navigate(['/dashboard']);
       }, 1000);
 
     } else {

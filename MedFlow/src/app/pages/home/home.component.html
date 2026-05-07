@@ -14,11 +14,16 @@
         </div>
         <span class="header-logo">MedFlow</span>
       </div>
-      <button class="notif-btn">
+      <button class="notif-btn" (click)="toggleNotifications()">
         <i class="fa-solid fa-bell"></i>
       </button>
     </header>
 
+    <app-notification
+      *ngIf="showNotifications"
+      (close)="closeNotifications()"
+    ></app-notification>
+    
     <!-- Scrollable Page -->
     <div class="page-content">
 
@@ -30,7 +35,7 @@
         </div>
 
         <div class="topbar-actions">
-          <button class="topbar-notif">
+          <button class="topbar-notif" (click)="toggleNotifications()">
             <i class="fa-solid fa-bell"></i>
           </button>
           <button class="topbar-notif" (click)="navigateToProfile()">
@@ -64,7 +69,7 @@
               <div class="appt-avatar">{{ appt.avatar }}</div>
 
               <div class="appt-info">
-                <div class="appt-name">{{ appt.doctor }}</div>
+                <div class="appt-name">{{ appt.doctorName }}</div>
                 <div class="appt-meta">
                   {{ appt.specialty }} • {{ appt.time }}
                 </div>

@@ -1,0 +1,130 @@
+<div class="app-layout">
+
+  <!-- Sidebar -->
+  <app-sidebar></app-sidebar>
+
+  <!-- Main -->
+  <div class="main-content">
+
+    <!-- Scroll -->
+    <div class="page-content">
+
+      <!-- Header -->
+      <header class="page-header">
+
+        <div>
+          <h1>Patients</h1>
+          <p>Your registered and visited patients</p>
+        </div>
+
+        <!-- Search -->
+        <div class="search-box">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input
+            type="text"
+            placeholder="Search patients..."
+            [(ngModel)]="searchText"
+          />
+        </div>
+
+      </header>
+
+      <!-- Stats -->
+      <section class="stats-grid">
+
+        <div class="stat-card">
+          <h3>{{ patients.length }}</h3>
+          <p>Total Patients</p>
+        </div>
+
+        <div class="stat-card">
+          <h3>{{ activePatients }}</h3>
+          <p>Active Cases</p>
+        </div>
+
+        <div class="stat-card">
+          <h3>{{ newPatients }}</h3>
+          <p>New This Month</p>
+        </div>
+
+      </section>
+
+      <!-- Patients List -->
+      <section class="patients-section">
+
+        <h2 class="section-title">Patient List</h2>
+
+        <div class="patients-list">
+
+          <div
+            class="patient-card card text-center"
+            *ngFor="let p of filteredPatients()"
+            (click)="selectPatient(p)"
+          >
+
+            <div class="avatar">
+              {{ p.avatar }}
+            </div>
+
+            <div class="info">
+              <h3>{{ p.name }}</h3>
+              <p>{{ p.email }}</p>
+
+              <div class="meta">
+                <span>📍 {{ p.location }}</span>
+                <span>🩸 {{ p.blood }}</span>
+                <span>🎂 {{ p.age }} yrs</span>
+              </div>
+
+            </div>
+
+            <div class="badge">
+              {{ p.gender }}
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- Selected Patient -->
+      <section class="details" *ngIf="selectedPatient">
+
+        <h2>Patient Details</h2>
+
+        <div class="details-card text-center">
+
+          <div class="avatar-large">
+            {{ selectedPatient.avatar }}
+          </div>
+
+          <div class="details-info text-center">
+
+            <h3>{{ selectedPatient.name }}</h3>
+
+            <p>{{ selectedPatient.email }}</p>
+            <p>{{ selectedPatient.phone }}</p>
+
+            <div class="details-meta">
+
+              <span>📍 {{ selectedPatient.location }}</span>
+              <span>🩸 {{ selectedPatient.blood }}</span>
+              <span>⚧ {{ selectedPatient.gender }}</span>
+              <span>🎂 {{ selectedPatient.age }} years</span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+    </div>
+
+    <!-- Navbar -->
+    <app-navbar [isDoctor]="true"></app-navbar>
+
+  </div>
+</div>

@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
 import { SidebarComponent } from '../../shared/components/sidebar/sidebar.component';
-import { APPOINTMENT_HISTORY, Appointment } from '../../shared/models/data';
+
+import { APPOINTMENT_HISTORY, Appointment, CURRENT_PATIENT, Patient } from '../../shared/models/data';
 
 @Component({
   selector: 'app-patient-profile',
@@ -16,20 +18,12 @@ export class PatientProfileComponent {
 
   appointmentHistory: Appointment[] = APPOINTMENT_HISTORY;
 
-  patient = {
-    name: 'Sarah Jenkins',
-    email: 'sarah.jenkins@gmail.com',
-    phone: '+1 (555) 234-8901',
-    location: 'Portland, OR',
-    age: 28,
-    blood: 'O+',
-    gender: 'F',
-    avatar: '👩'
-  };
+  patient: Patient = CURRENT_PATIENT;
 
   constructor(private router: Router) {}
 
   logout(): void {
+    // later you can clear token here
     this.router.navigate(['/login']);
   }
 }

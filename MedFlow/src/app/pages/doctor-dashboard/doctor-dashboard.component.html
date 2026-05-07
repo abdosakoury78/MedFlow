@@ -1,0 +1,155 @@
+<div class="dashboard-layout h-100">
+
+  <!-- Sidebar -->
+  <app-sidebar></app-sidebar>
+
+  <!-- Main -->
+  <main class="dashboard-main">
+
+    <!-- Scrollable Content -->
+    <div class="dashboard-content">
+
+      <!-- Header -->
+      <header class="dashboard-header">
+
+        <div>
+          <h1>Doctor Dashboard</h1>
+          <p>Welcome back, {{ doctor.name }}</p>
+        </div>
+
+        <div class="doctor-status">
+
+          <span
+            class="status-dot"
+            [class.online]="doctor.isOnline">
+          </span>
+
+          {{ doctor.isOnline ? 'Online' : 'Offline' }}
+
+        </div>
+
+      </header>
+
+      <!-- Doctor Card -->
+      <section class="doctor-card">
+
+        <div class="doctor-avatar">
+          {{ doctor.avatar }}
+        </div>
+
+        <div class="doctor-info">
+
+          <h2>{{ doctor.name }}</h2>
+
+          <p>{{ doctor.specialty }}</p>
+
+          <div class="doctor-meta">
+
+            <span>
+              <i class="fa-solid fa-dollar-sign"></i>
+              ${{ doctor.consultationFee }}
+            </span>
+
+            <span>
+              <i class="fa-solid fa-clock"></i>
+              {{ doctor.workingHours[0].hours }}
+            </span>
+
+            <span>
+              <i class="fa-solid fa-star"></i>
+              {{ doctor.rating }} Rating
+            </span>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- Stats -->
+      <section class="stats-grid">
+
+        <div
+          class="stat-card"
+          *ngFor="let stat of stats"
+        >
+
+          <div class="stat-icon">
+            <i
+              class="fa-solid"
+              [ngClass]="stat.icon"
+            ></i>
+          </div>
+
+          <div>
+            <h3>{{ stat.value }}</h3>
+            <p>{{ stat.title }}</p>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- Patients -->
+      <section class="appointments-section">
+
+        <div class="section-header">
+          <h2>Today's Patients</h2>
+        </div>
+
+        <div class="appointments-list">
+
+          <div
+            class="appointment-card"
+            *ngFor="let appt of doctorAppointments"
+          >
+
+            <div class="appointment-avatar">
+              {{ appt.patientAvatar }}
+            </div>
+
+            <div class="appointment-info">
+
+              <h3>{{ appt.patientName }}</h3>
+
+              <p>{{ appt.appointmentType }}</p>
+
+              <div class="appointment-meta">
+
+                <span>
+                  <i class="fa-regular fa-clock"></i>
+                  {{ appt.time }}
+                </span>
+
+                <span>
+                  <i class="fa-solid fa-hourglass-half"></i>
+                  {{ appt.duration }} mins
+                </span>
+
+              </div>
+
+            </div>
+
+            <div
+              class="appointment-status"
+              [class.completed]="appt.status === 'completed'"
+              [class.upcoming]="appt.status === 'upcoming'"
+              [class.cancelled]="appt.status === 'cancelled'"
+            >
+              {{ appt.status }}
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+    </div>
+
+    <!-- Navbar -->
+    <app-navbar [isDoctor]="true"></app-navbar>
+
+  </main>
+
+</div>

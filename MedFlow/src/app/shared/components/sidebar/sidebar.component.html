@@ -5,55 +5,129 @@
     <div class="sidebar-logo-icon">
       <i class="fa-solid fa-plus"></i>
     </div>
+
     <span class="sidebar-logo-text">MedFlow</span>
   </div>
 
-  <!-- Navigation -->
-  <nav class="sidebar-nav">
+  <!-- ================= PATIENT NAV ================= -->
+  @if(!isDoctor) {
 
-    <a
-      routerLink="/home"
-      routerLinkActive="active"
-      [routerLinkActiveOptions]="{ exact: true }"
-      class="sidebar-nav-item"
-    >
-      <i class="fa-solid fa-house sidebar-nav-icon"></i>
-      Home
-    </a>
+    <nav class="sidebar-nav">
 
-    <a routerLink="/appointments" class="sidebar-nav-item" routerLinkActive="active">
-      <i class="fa-solid fa-calendar sidebar-nav-icon"></i>
-      Appointments
-    </a>
+      <a
+        routerLink="/home"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="sidebar-nav-item"
+      >
+        <i class="fa-solid fa-house sidebar-nav-icon"></i>
+        Home
+      </a>
 
-    <a routerLink="/doctors" class="sidebar-nav-item" routerLinkActive="active">
-      <i class="fa-solid fa-magnifying-glass sidebar-nav-icon"></i>
-      Find Doctor
-    </a>
+      <a
+        routerLink="/appointments"
+        routerLinkActive="active"
+        class="sidebar-nav-item"
+      >
+        <i class="fa-solid fa-calendar sidebar-nav-icon"></i>
+        Appointments
+      </a>
 
-    <a routerLink="/profile" class="sidebar-nav-item" routerLinkActive="active">
-      <i class="fa-solid fa-user sidebar-nav-icon"></i>
-      My Profile
-    </a>
-    <a class="sidebar-nav-item logout-item mb-2" (click)="logout()">
-      <span class="sidebar-nav-icon">
-        <i class="fa-solid fa-right-from-bracket"></i>
-      </span>
-      Logout
-    </a>
+      <a
+        routerLink="/doctors"
+        routerLinkActive="active"
+        class="sidebar-nav-item"
+      >
+        <i class="fa-solid fa-magnifying-glass sidebar-nav-icon"></i>
+        Find Doctor
+      </a>
 
-  </nav>
+      <a
+        routerLink="/profile"
+        routerLinkActive="active"
+        class="sidebar-nav-item"
+      >
+        <i class="fa-solid fa-user sidebar-nav-icon"></i>
+        My Profile
+      </a>
+
+      <a class="sidebar-nav-item logout-item mb-2" (click)="logout()">
+        <i class="fa-solid fa-right-from-bracket sidebar-nav-icon"></i>
+        Logout
+      </a>
+
+    </nav>
+
+  }
+
+  <!-- ================= DOCTOR NAV ================= -->
+  @else {
+
+    <nav class="sidebar-nav">
+
+      <a
+        routerLink="/dashboard"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="sidebar-nav-item"
+      >
+        <i class="fa-solid fa-chart-line sidebar-nav-icon"></i>
+        Dashboard
+      </a>
+
+      <a
+        routerLink="/schedule"
+        routerLinkActive="active"
+        class="sidebar-nav-item"
+      >
+        <i class="fa-solid fa-calendar-check sidebar-nav-icon"></i>
+        Appointments
+      </a>
+
+      <a
+        routerLink="/patients"
+        routerLinkActive="active"
+        class="sidebar-nav-item"
+      >
+        <i class="fa-solid fa-users sidebar-nav-icon"></i>
+        Patients
+      </a>
+
+      <a
+        routerLink="/doctor-profile"
+        routerLinkActive="active"
+        class="sidebar-nav-item"
+      >
+        <i class="fa-solid fa-user-doctor sidebar-nav-icon"></i>
+        My Profile
+      </a>
+
+      <a class="sidebar-nav-item logout-item mb-2" (click)="logout()">
+        <i class="fa-solid fa-right-from-bracket sidebar-nav-icon"></i>
+        Logout
+      </a>
+
+    </nav>
+
+  }
 
   <!-- User -->
   <div class="sidebar-user">
+
     <div class="sidebar-user-avatar">
       <i class="fa-solid fa-user"></i>
     </div>
 
     <div class="sidebar-user-info">
-      <div class="sidebar-user-name">{{ user.name }}</div>
-      <div class="sidebar-user-role">{{ user.role }}</div>
+      <div class="sidebar-user-name">
+        {{ user.name }}
+      </div>
+
+      <div class="sidebar-user-role">
+        {{ user.role }}
+      </div>
     </div>
+
   </div>
 
 </aside>
