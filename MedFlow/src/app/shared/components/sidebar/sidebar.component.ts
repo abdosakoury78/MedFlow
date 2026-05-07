@@ -13,7 +13,7 @@ import { SidebarUser, SIDEBAR_USER } from '../../models/data';
 export class SidebarComponent {
 
   user: SidebarUser = SIDEBAR_USER;
-  isDoctor: boolean = true; // Set to true for testing, replace with real role check
+  isDoctor: boolean = this.user.role === "Doctor"; // Set to true for testing, replace with real role check
 
   constructor(private router: Router) {}
 

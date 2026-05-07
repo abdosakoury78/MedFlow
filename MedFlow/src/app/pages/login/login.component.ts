@@ -46,6 +46,17 @@ export class LoginComponent {
     }
 
     // fake validation (replace later with backend)
+     if (this.email === 'khalid@test.com' && this.password === '1234567') {
+      this.showAlert('Login successful!', 'success');
+
+      setTimeout(() => {
+        this.router.navigate(['/home']);
+      }, 1000);
+
+    } else {
+      this.showAlert('Invalid email or password', 'error');
+    }
+
     if (this.email === 'admin@test.com' && this.password === '123456') {
       this.showAlert('Login successful!', 'success');
 
