@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AlertComponent } from '../../shared/components/alert/alert.component';
+import { PatientService } from '../../services/patient.service';
 
 @Component({
   selector: 'app-signup',
@@ -25,46 +26,50 @@ export class SignupComponent {
   alertVisible = false;
   alertMessage = '';
   alertType: 'success' | 'error' | 'warning' | 'info' = 'info';
-  constructor(private router: Router) {}
 
-  togglePassword() {
-    this.showPassword = !this.showPassword;
-  }
+  constructor(private router: Router, private patientService: PatientService) {}
 
-  toggleConfirmPassword() {
-    this.showConfirmPassword = !this.showConfirmPassword;
-  }
+  togglePassword() { this.showPassword = !this.showPassword; }
+  toggleConfirmPassword() { this.showConfirmPassword = !this.showConfirmPassword; }
 
   onSignUp() {
     if (!this.name || !this.email || !this.password || !this.confirmPassword) {
       this.showAlert('Please fill all fields', 'warning');
       return;
     }
-
     if (this.password !== this.confirmPassword) {
       this.showAlert('Passwords do not match', 'error');
       return;
     }
 
-    const user = {
+    // Only patient self-registration is supported via this form.
+    // Doctor accounts must be created by an admin via POST /api/doctors.
+    const dto: any = {
       name: this.name,
       email: this.email,
-      role: this.role
+      phone: '',
+      location: '',
+      age: 0,
+      blood: '',
+      gender: '',
+      avatar: '👤'
     };
 
-    console.log('User registered:', user);
-
-    this.showAlert('Account created successfully!', 'success');
-
-    setTimeout(() => {
-      this.router.navigate(['/login']);
-    }, 1200);
+    this.patientService.createPatient(dto).subscribe({
+      next: () => {
+        this.showAlert('Account created successfully!', 'success');
+        setTimeout(() => this.router.navigate(['/login']), 1200);
+      },
+      error: (err) => {
+        const msg = err?.error?.message || 'Registration failed. Email may already be in use.';
+        this.showAlert(msg, 'error');
+      }
+    });
   }
 
   showAlert(message: string, type: 'success' | 'error' | 'warning' | 'info') {
     this.alertMessage = message;
     this.alertType = type;
     this.alertVisible = true;
-
   }
 }

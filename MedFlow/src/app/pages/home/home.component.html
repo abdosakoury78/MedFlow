@@ -23,7 +23,7 @@
       *ngIf="showNotifications"
       (close)="closeNotifications()"
     ></app-notification>
-    
+
     <!-- Scrollable Page -->
     <div class="page-content">
 
@@ -71,7 +71,7 @@
               <div class="appt-info">
                 <div class="appt-name">{{ appt.doctorName }}</div>
                 <div class="appt-meta">
-                  {{ appt.specialty }} • {{ appt.time }}
+                  {{ appt.specialty }} • {{ appt.time | date: 'shortTime' }}
                 </div>
               </div>
 

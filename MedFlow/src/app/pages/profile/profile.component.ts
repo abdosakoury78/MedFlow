@@ -1,10 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { Doctor, DOCTORS } from '../../shared/models/data';
+import { Doctor } from '../../shared/models/data';
 import { FormsModule } from '@angular/forms';
 import { SidebarComponent } from '../../shared/components/sidebar/sidebar.component';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
+import { DoctorService } from '../../services/doctor.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-profile',
@@ -13,19 +15,31 @@ import { NavbarComponent } from '../../shared/components/navbar/navbar.component
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'
 })
-export class ProfileComponent {
+export class ProfileComponent implements OnInit {
 
-  doctor: Doctor = DOCTORS[0]; // replace with route param later
+  doctor?: Doctor;
+  loading = true;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private doctorService: DoctorService,
+    private authService: AuthService
+  ) {}
 
-  goBack() {
-    this.router.navigate(['/dashboard']);
+  ngOnInit(): void {
+    const doctorId = this.authService.getUserId();
+    if (!doctorId) { this.router.navigate(['/login']); return; }
+
+    this.doctorService.getDoctorById(doctorId).subscribe({
+      next: (doc) => { this.doctor = doc; this.loading = false; },
+      error: () => { this.loading = false; }
+    });
   }
 
+  goBack() { this.router.navigate(['/dashboard']); }
+
   logout() {
-    // Clear any authentication tokens or user data here
-    // For this demo, we'll just navigate back to the login page
+    this.authService.logout();
     this.router.navigate(['/login']);
   }
 }

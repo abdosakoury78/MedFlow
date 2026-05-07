@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { DOCTORS, Doctor } from '../../shared/models/data';
+import { Doctor } from '../../shared/models/data';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
 import { SidebarComponent } from '../../shared/components/sidebar/sidebar.component';
+import { DoctorService } from '../../services/doctor.service';
 
 @Component({
   selector: 'app-doctor-profile',
@@ -14,25 +15,27 @@ import { SidebarComponent } from '../../shared/components/sidebar/sidebar.compon
 })
 export class DoctorProfileComponent implements OnInit {
 
-  doctor!: Doctor;
+  doctor?: Doctor;
+  loading = true;
+  error = false;
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private doctorService: DoctorService
   ) {}
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
-
-    const found = DOCTORS.find(d => d.id === id);
-    this.doctor = found ?? DOCTORS[0]; // fallback
+    this.doctorService.getDoctorById(id).subscribe({
+      next: (doc) => { this.doctor = doc; this.loading = false; },
+      error: () => { this.error = true; this.loading = false; }
+    });
   }
 
-  goBack(): void {
-    this.router.navigate(['/home']);
-  }
+  goBack(): void { this.router.navigate(['/home']); }
 
   bookAppointment(): void {
-    this.router.navigate(['/book', this.doctor.id]);
+    if (this.doctor) this.router.navigate(['/book', this.doctor.id]);
   }
 }

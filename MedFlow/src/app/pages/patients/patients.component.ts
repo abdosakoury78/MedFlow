@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SidebarComponent } from '../../shared/components/sidebar/sidebar.component';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
+import { Patient } from '../../shared/models/data';
+import { PatientService } from '../../services/patient.service';
 
 @Component({
   selector: 'app-patients',
@@ -11,47 +13,35 @@ import { NavbarComponent } from '../../shared/components/navbar/navbar.component
   templateUrl: './patients.component.html',
   styleUrls: ['./patients.component.css']
 })
-export class PatientsComponent {
+export class PatientsComponent implements OnInit {
 
-  searchText: string = '';
+  searchText = '';
+  selectedPatient?: Patient;
+  patients: Patient[] = [];
+  loading = true;
 
-  selectedPatient: any = null;
+  // NOTE: Backend needs GET /api/patients or GET /api/patients/doctor/{doctorId}
+  // Currently PatientService only supports getById and getByEmail.
+  // This component fetches patients by ID range as a placeholder.
+  // Add a proper endpoint when ready.
 
-  activePatients = 12;
-  newPatients = 3;
+  constructor(private patientService: PatientService) {}
 
-  patients = [
-    {
-      name: 'Sarah Johnson',
-      email: 'sarah@gmail.com',
-      phone: '+1 234 567',
-      location: 'Cairo',
-      age: 28,
-      blood: 'O+',
-      gender: 'F',
-      avatar: '👩'
-    },
-    {
-      name: 'Omar Khaled',
-      email: 'omar@gmail.com',
-      phone: '+1 555 111',
-      location: 'Giza',
-      age: 35,
-      blood: 'A+',
-      gender: 'M',
-      avatar: '🧑'
-    },
-    {
-      name: 'Mona Adel',
-      email: 'mona@gmail.com',
-      phone: '+1 777 222',
-      location: 'Alex',
-      age: 30,
-      blood: 'B+',
-      gender: 'F',
-      avatar: '👩'
-    }
-  ];
+  ngOnInit(): void {
+    // Temporary: load patients 1-20 until backend adds a list endpoint
+    const requests = Array.from({ length: 5 }, (_, i) =>
+      this.patientService.getPatientById(i + 1)
+    );
+
+    let completed = 0;
+    requests.forEach(req =>
+      req.subscribe({
+        next: (p) => { this.patients.push(p); },
+        error: () => {},
+        complete: () => { completed++; if (completed === requests.length) this.loading = false; }
+      })
+    );
+  }
 
   filteredPatients() {
     return this.patients.filter(p =>
@@ -59,7 +49,7 @@ export class PatientsComponent {
     );
   }
 
-  selectPatient(p: any) {
-    this.selectedPatient = p;
-  }
+  selectPatient(p: Patient) { this.selectedPatient = p; }
+
+  get activePatients() { return this.patients.length; }
 }

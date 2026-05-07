@@ -42,7 +42,7 @@
       [type]="alertType"
       (close)="alertVisible = false">
     </app-alert>
-    
+
     <div class="login-card">
       <div class="card-icon">
         <div class="icon-wrap">
@@ -54,6 +54,16 @@
       <p class="card-sub">Empowering your wellness journey</p>
 
       <div class="form-group">
+        <!-- Role Toggle — add inside the form, before email input -->
+        <div class="role-toggle">
+          <button type="button"
+            [class.active]="selectedRole === 'PATIENT'"
+            (click)="selectedRole = 'PATIENT'">Patient</button>
+          <button type="button"
+            [class.active]="selectedRole === 'DOCTOR'"
+            (click)="selectedRole = 'DOCTOR'">Doctor</button>
+        </div>
+        
         <label class="form-label">EMAIL ADDRESS</label>
         <input
           type="email"
