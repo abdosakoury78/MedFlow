@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AlertComponent } from '../../shared/components/alert/alert.component';
 import { PatientService } from '../../services/patient.service';
+import { DoctorService } from '../../services/doctor.service';
+import { Doctor } from '../../shared/models/data';
 
 @Component({
   selector: 'app-signup',
@@ -27,7 +29,7 @@ export class SignupComponent {
   alertMessage = '';
   alertType: 'success' | 'error' | 'warning' | 'info' = 'info';
 
-  constructor(private router: Router, private patientService: PatientService) {}
+  constructor(private router: Router, private patientService: PatientService, private doctorService: DoctorService) { }
 
   togglePassword() { this.showPassword = !this.showPassword; }
   toggleConfirmPassword() { this.showConfirmPassword = !this.showConfirmPassword; }
@@ -55,16 +57,45 @@ export class SignupComponent {
       avatar: '👤'
     };
 
-    this.patientService.createPatient(dto).subscribe({
-      next: () => {
-        this.showAlert('Account created successfully!', 'success');
-        setTimeout(() => this.router.navigate(['/login']), 1200);
-      },
-      error: (err) => {
-        const msg = err?.error?.message || 'Registration failed. Email may already be in use.';
-        this.showAlert(msg, 'error');
-      }
-    });
+    const dtoDoctor: Doctor = {
+      id: 0,
+      name: this.name,
+      email: this.email,
+      specialty: '',
+      experience: 0,
+      rating: 0,
+      reviews: 0,
+      patientsCount: 0,
+      avatar: '👤',
+      bio: '',
+      specialties: [],
+      workingHours: [],
+      consultationFee: 0,
+      online: false
+    }
+    if (this.role === 'patient') {
+      this.patientService.createPatient(dto).subscribe({
+        next: () => {
+          this.showAlert('Account created successfully!', 'success');
+          setTimeout(() => this.router.navigate(['/login']), 1200);
+        },
+        error: (err) => {
+          const msg = err?.error?.message || 'Registration failed. Email may already be in use.';
+          this.showAlert(msg, 'error');
+        }
+      });
+    } else {
+      this.doctorService.createDoctor(dtoDoctor).subscribe({
+        next: () => {
+          this.showAlert('Doctor account created successfully!', 'success');
+          setTimeout(() => this.router.navigate(['/login']), 1200);
+        },
+        error: (err) => {
+          const msg = err?.error?.message || 'Registration failed. Email may already be in use.';
+          this.showAlert(msg, 'error');
+        }
+      });
+    }
   }
 
   showAlert(message: string, type: 'success' | 'error' | 'warning' | 'info') {

@@ -1,4 +1,4 @@
-<div class="app-layout" *ngIf="doctor">
+<div class="app-layout">
 
   <!-- Sidebar -->
   <app-sidebar></app-sidebar>
@@ -12,8 +12,13 @@
       [visible]="alertVisible"
       (close)="onAlertClose()"
     ></app-alert>
-    
-    <div class="page-container">
+
+    <!-- Loading state -->
+    <div *ngIf="!doctor && !loading" class="error-state">
+      <p>Doctor not found.</p>
+    </div>
+
+    <div class="page-container" *ngIf="doctor">
 
       <!-- Header -->
       <header class="page-header">
@@ -33,7 +38,7 @@
         </div>
       </div>
 
-      <!-- ✅ NEW: Split Layout -->
+      <!-- Split Layout -->
       <div class="booking-layout">
 
         <!-- LEFT: CALENDAR -->
@@ -68,11 +73,15 @@
 
           <h3>Available Time</h3>
 
+          <div *ngIf="timeSlots.length === 0" class="empty-state">
+            <p>No slots available for this date.</p>
+          </div>
+
           <div class="slots">
             <button
               *ngFor="let slot of timeSlots"
               class="slot"
-              [class.active]="slot.time === selectedSlot"
+              [class.active]="selectedSlot?.id === slot.id"
               [disabled]="!slot.available"
               (click)="selectSlot(slot)"
             >
@@ -92,14 +101,20 @@
     </div>
 
     <!-- Footer -->
-    <div class="footer">
+    <div class="footer" *ngIf="doctor">
       <div>
         <small>Total</small>
         <h3>${{ doctor.consultationFee }}</h3>
       </div>
 
-      <button class="btn-primary" (click)="confirmBooking()">
-        {{ confirmed ? 'Booked ✅' : 'Confirm' }}
+      <button
+        class="btn-primary"
+        (click)="confirmBooking()"
+        [disabled]="loading || confirmed"
+      >
+        <span *ngIf="loading">Booking...</span>
+        <span *ngIf="!loading && !confirmed">Confirm</span>
+        <span *ngIf="confirmed">Booked ✅</span>
       </button>
     </div>
 

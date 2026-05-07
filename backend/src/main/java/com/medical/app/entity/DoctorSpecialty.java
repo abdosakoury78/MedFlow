@@ -22,4 +22,7 @@ public class DoctorSpecialty {
 
     @Column(nullable = false, length = 100)
     private String specialty;
+
+    @Column(name = "doctor_email", length = 150)
+    private String doctorEmail;
 }

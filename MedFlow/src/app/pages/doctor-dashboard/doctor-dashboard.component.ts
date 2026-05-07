@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SidebarComponent } from '../../shared/components/sidebar/sidebar.component';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
-import { Doctor } from '../../shared/models/data';
+import { Doctor, Appointment } from '../../shared/models/data';
 import { DoctorService } from '../../services/doctor.service';
+import { AppointmentService } from '../../services/appointment.service';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -16,12 +17,14 @@ import { AuthService } from '../../services/auth.service';
 export class DoctorDashboardComponent implements OnInit {
 
   doctor?: Doctor;
+  todayAppointments: Appointment[] = [];
   loading = true;
 
   stats: { title: string; value: any; icon: string }[] = [];
 
   constructor(
     private doctorService: DoctorService,
+    private appointmentService: AppointmentService,
     private authService: AuthService
   ) {}
 
@@ -41,6 +44,11 @@ export class DoctorDashboardComponent implements OnInit {
         ];
       },
       error: () => { this.loading = false; }
+    });
+
+    this.appointmentService.getTodayAppointments(doctorId).subscribe({
+      next: (appts) => { this.todayAppointments = appts; },
+      error: () => {}
     });
   }
 }

@@ -1,4 +1,14 @@
-<div class="app-layout" *ngIf="doctor">
+<!-- Loading state -->
+<div *ngIf="loading" class="loading-state">
+  <p>Loading doctor profile...</p>
+</div>
+
+<!-- Error state -->
+<div *ngIf="error && !loading" class="error-state">
+  <p>Doctor not found.</p>
+</div>
+
+<div class="app-layout" *ngIf="doctor && !loading">
 
   <!-- Sidebar -->
   <app-sidebar></app-sidebar>
@@ -26,6 +36,7 @@
       <section class="doc-hero">
         <div class="avatar-wrapper">
           <div class="doc-avatar">{{ doctor.avatar }}</div>
+          <!-- FIXED: was doctor.isOnline — Jackson strips "is" prefix, field is "online" -->
           <span class="status-dot" [class.online]="doctor.online"></span>
         </div>
 
@@ -61,7 +72,7 @@
         </section>
 
         <!-- Specialties -->
-        <section class="section">
+        <section class="section" *ngIf="doctor.specialties?.length">
           <h3>Specialties</h3>
           <div class="tags">
             <span *ngFor="let s of doctor.specialties" class="tag">{{ s }}</span>
@@ -69,7 +80,7 @@
         </section>
 
         <!-- Hours -->
-        <section class="section">
+        <section class="section" *ngIf="doctor.workingHours?.length">
           <h3>Working Hours</h3>
 
           <div class="hours">

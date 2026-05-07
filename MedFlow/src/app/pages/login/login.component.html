@@ -32,10 +32,9 @@
     </div>
   </div>
 
-  <!-- Login card (mobile: full screen, desktop: right panel) -->
+  <!-- Login card -->
   <div class="login-right">
 
-    <!-- ALERT HERE -->
     <app-alert
       [visible]="alertVisible"
       [message]="alertMessage"
@@ -53,17 +52,27 @@
       <h2 class="card-title">Welcome to<br>MedFlow</h2>
       <p class="card-sub">Empowering your wellness journey</p>
 
+      <!-- ADDED: Role Toggle -->
+      <div class="role-toggle">
+        <button
+          type="button"
+          class="role-btn"
+          [class.active]="selectedRole === 'PATIENT'"
+          (click)="selectedRole = 'PATIENT'"
+        >
+          Patient
+        </button>
+        <button
+          type="button"
+          class="role-btn"
+          [class.active]="selectedRole === 'DOCTOR'"
+          (click)="selectedRole = 'DOCTOR'"
+        >
+          Doctor
+        </button>
+      </div>
+
       <div class="form-group">
-        <!-- Role Toggle — add inside the form, before email input -->
-        <div class="role-toggle">
-          <button type="button"
-            [class.active]="selectedRole === 'PATIENT'"
-            (click)="selectedRole = 'PATIENT'">Patient</button>
-          <button type="button"
-            [class.active]="selectedRole === 'DOCTOR'"
-            (click)="selectedRole = 'DOCTOR'">Doctor</button>
-        </div>
-        
         <label class="form-label">EMAIL ADDRESS</label>
         <input
           type="email"
@@ -76,7 +85,7 @@
       <div class="form-group">
         <div class="label-row">
           <label class="form-label">PASSWORD</label>
-          <button class="forgot-btn">
+          <button type="button" class="forgot-btn">
             <i class="fa-solid fa-key"></i> Forgot?
           </button>
         </div>
@@ -87,7 +96,7 @@
             placeholder="••••••••"
             [(ngModel)]="password"
           />
-          <button class="toggle-pw" (click)="togglePassword()">
+          <button type="button" class="toggle-pw" (click)="togglePassword()">
             <i
               class="fa-solid"
               [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'">
@@ -104,14 +113,14 @@
         <span class="divider-line"></span>
       </div>
 
-      <button class="btn-google">
+      <button type="button" class="btn-google">
         <span class="google-icon">G</span>
         Continue with Google
       </button>
 
       <p class="signup-prompt">
         New to MedFlow?
-        <button class="link-btn" routerLink="/signup">Create an account</button>
+        <button type="button" class="link-btn" routerLink="/signup">Create an account</button>
       </p>
 
       <div class="card-footer">

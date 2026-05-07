@@ -12,6 +12,7 @@ public class CreateDoctorDTO {
 
     private String name;
     private String specialty; // Primary specialty
+    private String email;
     private Integer experience;
     private BigDecimal rating;
     private Integer reviews;

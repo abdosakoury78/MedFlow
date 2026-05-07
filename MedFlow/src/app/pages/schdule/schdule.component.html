@@ -19,33 +19,44 @@
         <div class="filter-tabs">
           <button (click)="setTab('today')" [class.active]="activeTab === 'today'">Today</button>
           <button (click)="setTab('upcoming')" [class.active]="activeTab === 'upcoming'">Upcoming</button>
+          <button (click)="setTab('history')" [class.active]="activeTab === 'history'">History</button>
         </div>
       </header>
 
-      <!-- TODAY -->
-      <section *ngIf="activeTab === 'today'" class="section">
+      <!-- Loading -->
+      <div *ngIf="loading" class="loading-state">
+        <p>Loading appointments...</p>
+      </div>
 
-        <h2 class="section-title">Today's Patients</h2>
+      <!-- TODAY -->
+      <!-- FIXED: was appt.patient, appt.avatar, appt.clinic — real DTO fields are doctorName, specialty, appointmentTime, clinic -->
+      <section *ngIf="activeTab === 'today' && !loading" class="section">
+
+        <h2 class="section-title">Today's Appointments</h2>
+
+        <div *ngIf="todayAppointments.length === 0" class="empty-state">
+          <p>No appointments today.</p>
+        </div>
 
         <div class="appointments-list">
 
           <div class="appointment-card card text-center"
                *ngFor="let appt of todayAppointments">
 
-            <div class="avatar">{{ appt.avatar }}</div>
+            <div class="avatar">🩺</div>
 
             <div class="info">
-              <h3>{{ appt.patient }}</h3>
+              <h3>{{ appt.doctorName }}</h3>
               <p>{{ appt.specialty }}</p>
 
               <div class="meta">
-                <span><i class="fa-regular fa-clock"></i> {{ appt.time }}</span>
-                <span><i class="fa-solid fa-location-dot"></i> {{ appt.clinic }}</span>
+                <span><i class="fa-regular fa-clock"></i> {{ appt.appointmentTime }}</span>
+                <span *ngIf="appt.clinic"><i class="fa-solid fa-location-dot"></i> {{ appt.clinic }}</span>
               </div>
             </div>
 
             <div class="status"
-                 [ngClass]="appt.status">
+                 [ngClass]="appt.status.toLowerCase()">
               {{ appt.status }}
             </div>
 
@@ -56,29 +67,69 @@
       </section>
 
       <!-- UPCOMING -->
-      <section *ngIf="activeTab === 'upcoming'" class="section">
+      <section *ngIf="activeTab === 'upcoming' && !loading" class="section">
 
-        <h2 class="section-title">Upcoming Patients</h2>
+        <h2 class="section-title">Upcoming Appointments</h2>
+
+        <div *ngIf="upcomingAppointments.length === 0" class="empty-state">
+          <p>No upcoming appointments.</p>
+        </div>
 
         <div class="appointments-list">
 
           <div class="appointment-card card text-center"
                *ngFor="let appt of upcomingAppointments">
 
-            <div class="avatar">{{ appt.avatar }}</div>
+            <div class="avatar">🩺</div>
 
             <div class="info">
-              <h3>{{ appt.patient }}</h3>
+              <h3>{{ appt.doctorName }}</h3>
               <p>{{ appt.specialty }}</p>
 
               <div class="meta">
-                <span><i class="fa-regular fa-calendar"></i> {{ appt.date }}</span>
-                <span><i class="fa-regular fa-clock"></i> {{ appt.time }}</span>
+                <span><i class="fa-regular fa-calendar"></i> {{ appt.appointmentDate }}</span>
+                <span><i class="fa-regular fa-clock"></i> {{ appt.appointmentTime }}</span>
               </div>
             </div>
 
             <div class="status upcoming">
-              upcoming
+              UPCOMING
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- HISTORY -->
+      <section *ngIf="activeTab === 'history' && !loading" class="section">
+
+        <h2 class="section-title">History</h2>
+
+        <div *ngIf="historyAppointments.length === 0" class="empty-state">
+          <p>No appointment history.</p>
+        </div>
+
+        <div class="appointments-list">
+
+          <div class="appointment-card card text-center"
+               *ngFor="let appt of historyAppointments">
+
+            <div class="avatar">🩺</div>
+
+            <div class="info">
+              <h3>{{ appt.doctorName }}</h3>
+              <p>{{ appt.specialty }}</p>
+
+              <div class="meta">
+                <span><i class="fa-regular fa-calendar"></i> {{ appt.appointmentDate }}</span>
+              </div>
+            </div>
+
+            <div class="status"
+                 [ngClass]="appt.status.toLowerCase()">
+              {{ appt.status }}
             </div>
 
           </div>

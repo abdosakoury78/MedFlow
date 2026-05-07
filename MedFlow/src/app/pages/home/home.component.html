@@ -31,7 +31,7 @@
       <div class="desktop-topbar">
         <div class="topbar-greeting">
           <span class="topbar-sub">Good morning,</span>
-          <h1 class="topbar-name">Ahmed</h1>
+          <h1 class="topbar-name">{{ patient?.name || 'User' }}</h1>
         </div>
 
         <div class="topbar-actions">
@@ -47,12 +47,17 @@
       <!-- Hero -->
       <div class="hero-banner">
         <p class="hero-greeting">Good morning,</p>
-        <h2 class="hero-name">Ahmed</h2>
-        <p class="hero-date">{{ today }}</p>
+        <h2 class="hero-name">{{ patient?.name || 'User' }}</h2>
+        <p class="hero-date">{{ today | date: 'fullDate' }}</p>
+      </div>
+
+      <!-- Loading state -->
+      <div *ngIf="loading" class="loading-state">
+        <p>Loading...</p>
       </div>
 
       <!-- Content -->
-      <div class="content-wrap">
+      <div class="content-wrap" *ngIf="!loading">
 
         <!-- Appointments -->
         <section class="section">
@@ -60,18 +65,23 @@
           <a class="view-more-link" routerLink="/appointments">
             View More <i class="fa-solid fa-arrow-right"></i>
           </a>
+
+          <div *ngIf="upcomingAppointments.length === 0" class="empty-state">
+            <p>No upcoming appointments.</p>
+          </div>
+
           <div class="appointments-list">
             <div
               class="appointment-card card"
               *ngFor="let appt of upcomingAppointments"
-              (click)="navigateToDoctor(appt.id)"
+              (click)="navigateToDoctor(appt.doctorId)"
             >
-              <div class="appt-avatar">{{ appt.avatar }}</div>
+              <div class="appt-avatar">🩺</div>
 
               <div class="appt-info">
                 <div class="appt-name">{{ appt.doctorName }}</div>
                 <div class="appt-meta">
-                  {{ appt.specialty }} • {{ appt.time | date: 'shortTime' }}
+                  {{ appt.specialty }} • {{ appt.appointmentTime }}
                 </div>
               </div>
 
@@ -85,7 +95,7 @@
           <h3 class="section-title">Quick Actions</h3>
 
           <div class="quick-actions-grid">
-            <button class="quick-action-btn" (click)="navigateToDoctor(1)">
+            <button class="quick-action-btn" routerLink="/doctors">
               <div class="qa-icon"><i class="fa-solid fa-calendar"></i></div>
               <span>Book Visit</span>
             </button>
@@ -95,7 +105,7 @@
               <span>My Profile</span>
             </button>
 
-            <button class="quick-action-btn" (click)="navigateToDoctor(1)">
+            <button class="quick-action-btn" routerLink="/doctors">
               <div class="qa-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
               <span>Find Doctor</span>
             </button>
@@ -110,6 +120,10 @@
         <!-- Doctors -->
         <section class="section desktop-only-section">
           <h3 class="section-title">Top Specialists</h3>
+
+          <div *ngIf="doctors.length === 0" class="empty-state">
+            <p>No doctors available right now.</p>
+          </div>
 
           <div class="doctors-grid">
             <div
@@ -131,6 +145,10 @@
             </div>
           </div>
         </section>
+
+      </div>
+
+    </div>
 
     <!-- Mobile Bottom Navbar -->
     <app-navbar activePage="home"></app-navbar>

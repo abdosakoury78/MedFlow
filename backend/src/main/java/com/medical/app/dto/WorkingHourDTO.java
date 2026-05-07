@@ -9,4 +9,5 @@ import lombok.*;
 public class WorkingHourDTO {
     private String days;
     private String hours;
+    private String doctorEmail;
 }

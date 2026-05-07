@@ -18,18 +18,8 @@ export class DoctorService {
   // GET ALL DOCTORS
   // /api/doctors?specialty=&search=
   // =====================
-  getAllDoctors(specialty?: string, search?: string): Observable<Doctor[]> {
-    let params = new HttpParams();
-
-    if (specialty) {
-      params = params.set('specialty', specialty);
-    }
-
-    if (search) {
-      params = params.set('search', search);
-    }
-
-    return this.http.get<Doctor[]>(this.baseUrl, { params });
+  getAllDoctors() : Observable<Doctor[]> {
+    return this.http.get<Doctor[]>(this.baseUrl);
   }
 
   // =====================
@@ -54,5 +44,9 @@ export class DoctorService {
   // =====================
   getOnlineDoctors(): Observable<Doctor[]> {
     return this.http.get<Doctor[]>(`${this.baseUrl}/online`);
+  }
+
+  createDoctor(dto: Doctor): Observable<Doctor> {
+    return this.http.post<Doctor>(this.baseUrl, dto);
   }
 }

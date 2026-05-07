@@ -17,25 +17,34 @@
       </button>
     </header>
 
+    <!-- Loading -->
+    <div *ngIf="loading" class="loading-state">
+      <p>Loading appointments...</p>
+    </div>
+
     <!-- Content -->
-    <div class="page-content">
+    <div class="page-content" *ngIf="!loading">
 
       <!-- Today -->
       <div class="day-group">
         <h3 class="day-title">Today</h3>
 
+        <div *ngIf="todayAppointments.length === 0" class="empty-state">
+          <p>No appointments today.</p>
+        </div>
+
         <div class="appointment-card" *ngFor="let appt of todayAppointments">
 
           <div class="time-box">
-            <span class="time">{{ appt.time }}</span>
+            <span class="time">{{ appt.appointmentTime }}</span>
             <span class="duration">{{ appt.duration }} min</span>
           </div>
 
           <div class="info">
             <div class="doctor">
-              <div class="avatar">{{ appt.avatar }}</div>
+              <div class="avatar">🩺</div>
               <div>
-                <h4>{{ appt.doctor }}</h4>
+                <h4>{{ appt.doctorName }}</h4>
                 <p>{{ appt.specialty }}</p>
               </div>
             </div>
@@ -45,15 +54,18 @@
             </div>
           </div>
 
-          <div class="status me-3" [ngClass]="appt.status">
+          <div class="status me-3" [ngClass]="appt.status.toLowerCase()">
             {{ appt.status }}
           </div>
 
           <div class="actions">
-            @if(appt.status === 'upcoming') {
-                <button><i class="fa-solid fa-pen"></i></button>
-            }
-            <button class="danger"><i class="fa-solid fa-xmark"></i></button>
+            <button
+              *ngIf="appt.status === 'UPCOMING'"
+              class="danger"
+              (click)="cancel(appt.id)"
+            >
+              <i class="fa-solid fa-xmark"></i>
+            </button>
           </div>
 
         </div>
@@ -63,18 +75,22 @@
       <div class="day-group">
         <h3 class="day-title">Upcoming</h3>
 
+        <div *ngIf="upcomingAppointments.length === 0" class="empty-state">
+          <p>No upcoming appointments.</p>
+        </div>
+
         <div class="appointment-card" *ngFor="let appt of upcomingAppointments">
 
           <div class="time-box">
-            <span class="time">{{ appt.date }}</span>
-            <span class="duration">{{ appt.time }}</span>
+            <span class="time">{{ appt.appointmentDate }}</span>
+            <span class="duration">{{ appt.appointmentTime }}</span>
           </div>
 
           <div class="info">
             <div class="doctor">
-              <div class="avatar">{{ appt.avatar }}</div>
+              <div class="avatar">🩺</div>
               <div>
-                <h4>{{ appt.doctor }}</h4>
+                <h4>{{ appt.doctorName }}</h4>
                 <p>{{ appt.specialty }}</p>
               </div>
             </div>
@@ -85,12 +101,13 @@
           </div>
 
           <div class="status upcoming me-3">
-            upcoming
+            UPCOMING
           </div>
 
           <div class="actions">
-            <button><i class="fa-solid fa-calendar"></i></button>
-            <button class="danger"><i class="fa-solid fa-xmark"></i></button>
+            <button class="danger" (click)="cancel(appt.id)">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
           </div>
 
         </div>

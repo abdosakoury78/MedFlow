@@ -25,6 +25,9 @@ public class Doctor {
     @Column(nullable = false, length = 100)
     private String specialty;
 
+    @Column(nullable = false, length = 150, unique = true)
+    private String email;
+
     private Integer experience;
 
     @Column(precision = 3, scale = 1)

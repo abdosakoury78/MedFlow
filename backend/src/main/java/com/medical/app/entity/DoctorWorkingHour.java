@@ -25,4 +25,7 @@ public class DoctorWorkingHour {
 
     @Column(nullable = false, length = 100)
     private String hours;
+
+    @Column(name = "doctor_email", length = 150)
+    private String doctorEmail;
 }

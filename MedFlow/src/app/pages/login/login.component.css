@@ -101,9 +101,27 @@
   background: rgba(255,255,255,0.06);
 }
 
-.c1 { width: 400px; height: 400px; top: -100px; right: -100px; }
-.c2 { width: 250px; height: 250px; bottom: 60px; right: 80px; background: rgba(255,255,255,0.04); }
-.c3 { width: 150px; height: 150px; top: 40%; left: -60px; }
+.c1 {
+  width: 400px;
+  height: 400px;
+  top: -100px;
+  right: -100px;
+}
+
+.c2 {
+  width: 250px;
+  height: 250px;
+  bottom: 60px;
+  right: 80px;
+  background: rgba(255,255,255,0.04);
+}
+
+.c3 {
+  width: 150px;
+  height: 150px;
+  top: 40%;
+  left: -60px;
+}
 
 /* ===== RIGHT PANEL ===== */
 .login-right {
@@ -150,12 +168,51 @@
   color: var(--text-primary);
   margin-bottom: 8px;
   line-height: 1.2;
+  text-align: center;
 }
 
 .card-sub {
   font-size: 14px;
   color: var(--text-muted);
-  margin-bottom: 32px;
+  margin-bottom: 28px;
+  text-align: center;
+}
+
+/* ===== ROLE TOGGLE ===== */
+.role-toggle {
+  display: flex;
+  background: var(--bg-muted);
+  border-radius: 14px;
+  padding: 4px;
+  margin-bottom: 24px;
+  gap: 4px;
+}
+
+.role-btn {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 12px;
+  border-radius: 10px;
+  cursor: pointer;
+
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+
+  color: var(--text-secondary);
+
+  transition: all 0.25s ease;
+}
+
+.role-btn:hover {
+  background: rgba(255,255,255,0.7);
+}
+
+.role-btn.active {
+  background: white;
+  color: var(--primary);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
 }
 
 /* Form */
@@ -189,7 +246,7 @@
   font-size: 15px;
   color: var(--text-primary);
   outline: none;
-  transition: border-color 0.2s;
+  transition: all 0.2s ease;
 }
 
 .form-input::placeholder {
@@ -199,6 +256,7 @@
 .form-input:focus {
   border-color: var(--primary);
   background: white;
+  box-shadow: 0 0 0 4px rgba(59,130,246,0.08);
 }
 
 .input-wrap {
@@ -235,6 +293,7 @@
 .sign-in-btn {
   margin-bottom: 20px;
   border-radius: var(--radius-xl);
+  width: 100%;
 }
 
 /* Divider */
@@ -270,10 +329,12 @@
   font-weight: 500;
   color: var(--text-primary);
   cursor: pointer;
+
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
+
   transition: all 0.2s;
   margin-bottom: 24px;
 }
@@ -286,10 +347,19 @@
 .google-icon {
   width: 22px;
   height: 22px;
-  background: linear-gradient(135deg, #4285F4, #EA4335, #FBBC04, #34A853);
+
+  background: linear-gradient(
+    135deg,
+    #4285F4,
+    #EA4335,
+    #FBBC04,
+    #34A853
+  );
+
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+
   font-weight: 800;
   font-size: 16px;
 }
@@ -330,6 +400,7 @@
 
 /* ===== DESKTOP ===== */
 @media (min-width: 1024px) {
+
   .login-left {
     display: flex;
   }
@@ -343,6 +414,7 @@
   }
 }
 
+/* ===== ICONS ===== */
 i {
   display: inline-flex;
   align-items: center;

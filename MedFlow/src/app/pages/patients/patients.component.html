@@ -30,6 +30,7 @@
       </header>
 
       <!-- Stats -->
+      <!-- FIXED: activePatients / newPatients were hardcoded; now use computed getter -->
       <section class="stats-grid">
 
         <div class="stat-card">
@@ -39,20 +40,24 @@
 
         <div class="stat-card">
           <h3>{{ activePatients }}</h3>
-          <p>Active Cases</p>
-        </div>
-
-        <div class="stat-card">
-          <h3>{{ newPatients }}</h3>
-          <p>New This Month</p>
+          <p>Loaded</p>
         </div>
 
       </section>
 
+      <!-- Loading -->
+      <div *ngIf="loading" class="loading-state">
+        <p>Loading patients...</p>
+      </div>
+
       <!-- Patients List -->
-      <section class="patients-section">
+      <section class="patients-section" *ngIf="!loading">
 
         <h2 class="section-title">Patient List</h2>
+
+        <div *ngIf="filteredPatients().length === 0" class="empty-state">
+          <p>No patients found.</p>
+        </div>
 
         <div class="patients-list">
 

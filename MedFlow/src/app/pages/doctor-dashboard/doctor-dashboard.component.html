@@ -6,8 +6,13 @@
   <!-- Main -->
   <main class="dashboard-main">
 
+    <!-- Loading -->
+    <div *ngIf="loading" class="loading-state">
+      <p>Loading dashboard...</p>
+    </div>
+
     <!-- Scrollable Content -->
-    <div class="dashboard-content">
+    <div class="dashboard-content" *ngIf="!loading && doctor">
 
       <!-- Header -->
       <header class="dashboard-header">
@@ -18,14 +23,12 @@
         </div>
 
         <div class="doctor-status">
-
+          <!-- FIXED: was doctor.isOnline → doctor.online -->
           <span
             class="status-dot"
-            [class.online]="doctor.isOnline">
+            [class.online]="doctor.online">
           </span>
-
-          {{ doctor.isOnline ? 'Online' : 'Offline' }}
-
+          {{ doctor.online ? 'Online' : 'Offline' }}
         </div>
 
       </header>
@@ -50,7 +53,8 @@
               ${{ doctor.consultationFee }}
             </span>
 
-            <span>
+            <!-- FIXED: was doctor.workingHours[0].hours — crashes if array is empty -->
+            <span *ngIf="doctor.workingHours?.length">
               <i class="fa-solid fa-clock"></i>
               {{ doctor.workingHours[0].hours }}
             </span>
@@ -90,35 +94,39 @@
 
       </section>
 
-      <!-- Patients -->
+      <!-- Today's Appointments -->
       <section class="appointments-section">
 
         <div class="section-header">
           <h2>Today's Patients</h2>
         </div>
 
+        <div *ngIf="todayAppointments.length === 0" class="empty-state">
+          <p>No patients scheduled for today.</p>
+        </div>
+
         <div class="appointments-list">
 
           <div
             class="appointment-card"
-            *ngFor="let appt of doctorAppointments"
+            *ngFor="let appt of todayAppointments"
           >
 
-            <div class="appointment-avatar">
-              {{ appt.patientAvatar }}
-            </div>
+            <div class="appointment-avatar">🧑</div>
 
             <div class="appointment-info">
 
-              <h3>{{ appt.patientName }}</h3>
+              <!-- FIXED: was appt.patientName / appt.appointmentType — those were mock fields.
+                   Real Appointment DTO has doctorName, specialty, appointmentTime -->
+              <h3>{{ appt.doctorName }}</h3>
 
-              <p>{{ appt.appointmentType }}</p>
+              <p>{{ appt.specialty }}</p>
 
               <div class="appointment-meta">
 
                 <span>
                   <i class="fa-regular fa-clock"></i>
-                  {{ appt.time }}
+                  {{ appt.appointmentTime }}
                 </span>
 
                 <span>
@@ -132,9 +140,9 @@
 
             <div
               class="appointment-status"
-              [class.completed]="appt.status === 'completed'"
-              [class.upcoming]="appt.status === 'upcoming'"
-              [class.cancelled]="appt.status === 'cancelled'"
+              [class.completed]="appt.status === 'COMPLETED'"
+              [class.upcoming]="appt.status === 'UPCOMING'"
+              [class.cancelled]="appt.status === 'CANCELLED'"
             >
               {{ appt.status }}
             </div>

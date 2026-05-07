@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PatientService } from '../../services/patient.service';
@@ -10,7 +10,7 @@ import { AlertComponent } from '../../shared/components/alert/alert.component';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, AlertComponent],
+  imports: [CommonModule, FormsModule, AlertComponent, RouterLink],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
@@ -30,7 +30,7 @@ export class LoginComponent {
     private patientService: PatientService,
     private doctorService: DoctorService,
     private authService: AuthService
-  ) {}
+  ) { }
 
   togglePassword() { this.showPassword = !this.showPassword; }
 
@@ -58,11 +58,11 @@ export class LoginComponent {
       });
     } else {
       // Doctor login: search by email via getAllDoctors + search
-      this.doctorService.getAllDoctors(undefined, this.email).subscribe({
+      this.doctorService.getAllDoctors().subscribe({
         next: (doctors) => {
-          const doctor = doctors.find(d => d.name.toLowerCase().includes(this.email.split('@')[0].toLowerCase()));
+          const doctor = doctors.find(d => d.email?.toLowerCase() === this.email.toLowerCase());
           if (doctor) {
-            this.authService.setUser({ id: doctor.id, email: this.email, role: 'DOCTOR' });
+            this.authService.setUser({ id: doctor.id, email: doctor.email || this.email, role: 'DOCTOR' });
             this.showAlert('Login successful!', 'success');
             setTimeout(() => this.router.navigate(['/dashboard']), 1000);
           } else {

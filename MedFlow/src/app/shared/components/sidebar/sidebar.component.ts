@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { SidebarUser, SIDEBAR_USER } from '../../models/data';
+import { SidebarUser } from '../../models/data';
+import { AuthService } from '../../../services/auth.service';
+
 
 @Component({
   selector: 'app-sidebar',
@@ -10,19 +12,27 @@ import { SidebarUser, SIDEBAR_USER } from '../../models/data';
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css']
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit {
 
-  user: SidebarUser = SIDEBAR_USER;
-  isDoctor: boolean = this.user.role === "Doctor"; // Set to true for testing, replace with real role check
+  user: SidebarUser = { name: '', role: '' };
+  isDoctor = false;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {}
+
+  ngOnInit(): void {
+    const authUser = this.authService.getUser();
+    if (authUser) {
+      this.user = { name: authUser.email, role: authUser.role };
+      this.isDoctor = authUser.role === 'DOCTOR';
+    }
+  }
 
   navigate(path: string) {
     this.router.navigate([path]);
   }
 
   logout() {
-    localStorage.clear(); // or remove token
+    this.authService.logout();
     this.router.navigate(['/login']);
   }
 }

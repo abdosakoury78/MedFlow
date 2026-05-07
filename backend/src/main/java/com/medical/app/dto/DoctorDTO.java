@@ -11,6 +11,7 @@ import java.util.List;
 public class DoctorDTO {
     private Long id;
     private String name;
+    private String email;
     private String specialty;
     private Integer experience;
     private BigDecimal rating;

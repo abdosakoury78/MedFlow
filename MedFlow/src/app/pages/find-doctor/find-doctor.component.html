@@ -36,7 +36,17 @@
         </div>
       </div>
 
-      <div class="doctors-grid">
+      <!-- Loading -->
+      <div *ngIf="loading" class="loading-state">
+        <p>Loading doctors...</p>
+      </div>
+
+      <!-- Empty state -->
+      <div *ngIf="!loading && filteredDoctors.length === 0" class="empty-state">
+        <p>No doctors found.</p>
+      </div>
+
+      <div class="doctors-grid" *ngIf="!loading">
 
         <div class="doctor-card card" *ngFor="let doc of filteredDoctors">
 

@@ -6,8 +6,13 @@
   <!-- Main -->
   <div class="main-content">
 
+    <!-- Loading -->
+    <div *ngIf="loading" class="loading-state">
+      <p>Loading profile...</p>
+    </div>
+
     <!-- Scroll area -->
-    <div class="page-container">
+    <div class="page-container" *ngIf="!loading && doctor">
 
       <!-- Header -->
       <header class="page-header">
@@ -29,7 +34,8 @@
 
         <div class="avatar-wrapper">
           <div class="avatar">{{ doctor.avatar }}</div>
-          <span class="status-dot" [class.online]="doctor.isOnline"></span>
+          <!-- FIXED: was doctor.isOnline → doctor.online -->
+          <span class="status-dot" [class.online]="doctor.online"></span>
         </div>
 
         <h2 class="name">{{ doctor.name }}</h2>
@@ -68,7 +74,7 @@
       </section>
 
       <!-- Specialties -->
-      <section class="card section">
+      <section class="card section" *ngIf="doctor.specialties?.length">
         <h3>Specialties</h3>
         <div class="tags">
           <span class="tag" *ngFor="let s of doctor.specialties">
@@ -78,7 +84,7 @@
       </section>
 
       <!-- Working Hours -->
-      <section class="card section">
+      <section class="card section" *ngIf="doctor.workingHours?.length">
         <h3>Working Hours</h3>
 
         <div class="hours">
@@ -90,7 +96,7 @@
 
       </section>
 
-      <!-- 🔥 Logout Card -->
+      <!-- Logout Card -->
       <section class="logout-card">
 
         <div class="logout-info">
