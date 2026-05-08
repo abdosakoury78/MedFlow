@@ -4,6 +4,7 @@ import com.medical.app.dto.AuthRequest;
 import com.medical.app.dto.AuthResponse;
 import com.medical.app.dto.DoctorDTO;
 import com.medical.app.dto.DoctorSignupRequest;
+import com.medical.app.dto.DoctorUpdateRequest;
 import com.medical.app.dto.WorkingHourDTO;
 import com.medical.app.entity.Doctor;
 import com.medical.app.entity.DoctorSpecialty;
@@ -11,6 +12,7 @@ import com.medical.app.entity.DoctorWorkingHour;
 import com.medical.app.repository.DoctorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -171,5 +173,59 @@ public class DoctorService {
                                 .message("Doctor logged in successfully")
                                 .user(toDTO(doctor))
                                 .build();
+        }
+
+        @Transactional
+        public DoctorDTO updateDoctor(Long id, DoctorUpdateRequest req) {
+                Doctor doctor = doctorRepository.findById(id)
+                                .orElseThrow(() -> new ResponseStatusException(
+                                                HttpStatus.NOT_FOUND, "Doctor not found: " + id));
+
+                if (req.getName() != null) {
+                        doctor.setName(req.getName());
+                }
+                if (req.getSpecialty() != null) {
+                        doctor.setSpecialty(req.getSpecialty());
+                }
+                if (req.getExperience() != null) {
+                        doctor.setExperience(req.getExperience());
+                }
+                if (req.getAvatar() != null) {
+                        doctor.setAvatar(req.getAvatar());
+                }
+                if (req.getBio() != null) {
+                        doctor.setBio(req.getBio());
+                }
+                if (req.getConsultationFee() != null) {
+                        doctor.setConsultationFee(req.getConsultationFee());
+                }
+                if (req.getIsOnline() != null) {
+                        doctor.setIsOnline(req.getIsOnline());
+                }
+
+                if (req.getSpecialtyTags() != null) {
+                        doctor.getSpecialties().clear();
+                        doctor.getSpecialties().addAll(req.getSpecialtyTags().stream()
+                                        .map(tag -> DoctorSpecialty.builder()
+                                                        .doctor(doctor)
+                                                        .doctorEmail(doctor.getEmail())
+                                                        .specialty(tag)
+                                                        .build())
+                                        .collect(Collectors.toList()));
+                }
+
+                if (req.getWorkingHours() != null) {
+                        doctor.getWorkingHours().clear();
+                        doctor.getWorkingHours().addAll(req.getWorkingHours().stream()
+                                        .map(hour -> DoctorWorkingHour.builder()
+                                                        .doctor(doctor)
+                                                        .doctorEmail(doctor.getEmail())
+                                                        .days(hour.getDays())
+                                                        .hours(hour.getHours())
+                                                        .build())
+                                        .collect(Collectors.toList()));
+                }
+
+                return toDTO(doctorRepository.save(doctor));
         }
 }

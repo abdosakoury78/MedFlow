@@ -9,41 +9,106 @@
 </div>
 
 <div class="app-layout" *ngIf="doctor && !loading">
-
   <!-- Sidebar -->
   <app-sidebar></app-sidebar>
 
   <!-- Main -->
   <div class="main-content">
-
+    <!-- Floating edit pen (top-right) -->
+    <button
+      class="floating-edit-btn"
+      aria-label="Edit profile"
+      title="Edit profile"
+      (click)="saveAndClose()"
+    >
+      <i *ngIf="!editMode" class="fa-solid fa-pen"></i>
+      <i *ngIf="editMode" class="fa-solid fa-check"></i>
+    </button>
     <!-- Scrollable area -->
     <div class="page-container">
-
       <!-- Header -->
       <header class="page-header">
-        <button class="icon-btn" (click)="goBack()">
+        <button
+          class="icon-btn"
+          (click)="goBack()"
+          title="Go back"
+          aria-label="Go back"
+        >
           <i class="fa-solid fa-arrow-left"></i>
         </button>
 
         <h2 class="page-title">Doctor Profile</h2>
 
-        <button class="icon-btn">
-          <i class="fa-solid fa-ellipsis-vertical"></i>
-        </button>
+        <div class="header-actions">
+          <button
+            class="icon-btn"
+            (click)="editMode ? cancelEdit() : toggleEdit()"
+            title="Edit profile"
+          >
+            <i *ngIf="!editMode" class="fa-solid fa-pen"></i>
+            <i *ngIf="editMode" class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
       </header>
 
       <!-- Hero -->
       <section class="doc-hero">
         <div class="avatar-wrapper">
           <div class="doc-avatar">
-            <img [src]="doctor.avatar" [alt]="doctor.name">
+            <img
+              [src]="doctor.avatar"
+              [alt]="doctor.name"
+              title="Doctor avatar"
+            />
           </div>
           <!-- FIXED: was doctor.isOnline — Jackson strips "is" prefix, field is "online" -->
           <span class="status-dot" [class.online]="doctor.online"></span>
         </div>
 
-        <h2 class="doc-name">{{ doctor.name }}</h2>
-        <p class="doc-specialty">{{ doctor.specialty }}</p>
+        <ng-container *ngIf="editMode">
+          <div class="edit-grid">
+            <input
+              class="inline-input"
+              placeholder="Avatar URL"
+              title="Avatar URL"
+              [(ngModel)]="editDoctor!.avatar"
+              (ngModelChange)="onFieldChange()"
+            />
+            <input
+              class="inline-input"
+              type="number"
+              placeholder="Experience"
+              title="Experience"
+              [(ngModel)]="editDoctor!.experience"
+              (ngModelChange)="onFieldChange()"
+            />
+          </div>
+        </ng-container>
+
+        <h2 class="doc-name">
+          <ng-container *ngIf="!editMode">{{ doctor.name }}</ng-container>
+          <ng-container *ngIf="editMode">
+            <input
+              class="inline-input"
+              placeholder="Doctor name"
+              title="Doctor name"
+              [(ngModel)]="editDoctor!.name"
+              (ngModelChange)="onFieldChange()"
+            />
+          </ng-container>
+        </h2>
+        <p class="doc-specialty">
+          <ng-container *ngIf="!editMode">{{ doctor.specialty }}</ng-container>
+          <ng-container *ngIf="editMode">
+            <input
+              class="inline-input"
+              placeholder="Specialty"
+              title="Specialty"
+              [(ngModel)]="editDoctor!.specialty"
+              (ngModelChange)="onFieldChange()"
+            />
+          </ng-container>
+        </p>
       </section>
 
       <!-- Stats -->
@@ -66,18 +131,30 @@
 
       <!-- Content -->
       <div class="content">
-
         <!-- About -->
         <section class="section">
           <h3>About</h3>
-          <p>{{ doctor.bio }}</p>
+          <ng-container *ngIf="!editMode">
+            <p>{{ doctor.bio }}</p>
+          </ng-container>
+          <ng-container *ngIf="editMode">
+            <textarea
+              class="large-input"
+              placeholder="Doctor bio"
+              title="Doctor bio"
+              [(ngModel)]="editDoctor!.bio"
+              (ngModelChange)="onFieldChange()"
+            ></textarea>
+          </ng-container>
         </section>
 
         <!-- Specialties -->
         <section class="section" *ngIf="doctor.specialties?.length">
           <h3>Specialties</h3>
           <div class="tags">
-            <span *ngFor="let s of doctor.specialties" class="tag">{{ s }}</span>
+            <span *ngFor="let s of doctor.specialties" class="tag">{{
+              s
+            }}</span>
           </div>
         </section>
 
@@ -92,24 +169,43 @@
             </div>
           </div>
         </section>
-
       </div>
-
     </div>
 
     <!-- CTA -->
     <div class="cta">
       <div class="fee">
         <small>Consultation</small>
-        <strong>${{ doctor.consultationFee }}</strong>
+        <ng-container *ngIf="!editMode">
+          <strong>${{ doctor.consultationFee }}</strong>
+        </ng-container>
+        <ng-container *ngIf="editMode">
+          <input
+            class="small-input"
+            type="number"
+            placeholder="Consultation fee"
+            title="Consultation fee"
+            [(ngModel)]="editDoctor!.consultationFee"
+            (ngModelChange)="onFieldChange()"
+          />
+        </ng-container>
       </div>
 
-      <button class="btn-primary full" (click)="bookAppointment()">
-        Book Appointment
-      </button>
+      <div class="cta-actions">
+        <button class="btn-primary full" (click)="bookAppointment()">
+          Book Appointment
+        </button>
+        <button *ngIf="editMode" class="btn-tertiary" (click)="cancelEdit()">
+          Cancel
+        </button>
+      </div>
+
+      <div class="autosave-status" *ngIf="saveMessage || saving">
+        <i *ngIf="saving" class="fa-solid fa-spinner fa-spin"></i>
+        <span>{{ saveMessage }}</span>
+      </div>
     </div>
 
     <app-navbar activePage="search"></app-navbar>
-
   </div>
 </div>

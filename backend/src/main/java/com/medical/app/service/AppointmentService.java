@@ -29,19 +29,19 @@ public class AppointmentService {
                                 .stream().map(this::toDTO).collect(Collectors.toList());
         }
 
-         // ── Today's appointments ─────────────────────────
-         public List<AppointmentDTO> getTodayAppointments(Long patientId) {
-                 return appointmentRepository
-                                 .findByPatientIdAndAppointmentDate(patientId, LocalDate.now())
-                                 .stream().map(this::toDTO).collect(Collectors.toList());
-         }
+        // ── Today's appointments ─────────────────────────
+        public List<AppointmentDTO> getTodayAppointments(Long patientId) {
+                return appointmentRepository
+                                .findByPatientIdAndAppointmentDate(patientId, LocalDate.now())
+                                .stream().map(this::toDTO).collect(Collectors.toList());
+        }
 
-         // ── Today's appointments for a doctor ─────────────────────────
-         public List<AppointmentDTO> getTodayAppointmentsForDoctor(Long doctorId) {
-                 return appointmentRepository
-                                 .findByDoctorIdAndAppointmentDate(doctorId, LocalDate.now())
-                                 .stream().map(this::toDTO).collect(Collectors.toList());
-         }
+        // ── Today's appointments for a doctor ─────────────────────────
+        public List<AppointmentDTO> getTodayAppointmentsForDoctor(Long doctorId) {
+                return appointmentRepository
+                                .findByDoctorIdAndAppointmentDate(doctorId, LocalDate.now())
+                                .stream().map(this::toDTO).collect(Collectors.toList());
+        }
 
         // ── Upcoming appointments ────────────────────────
         public List<AppointmentDTO> getUpcomingAppointments(Long patientId) {
@@ -110,6 +110,7 @@ public class AppointmentService {
                                 .doctorId(a.getDoctor().getId())
                                 .patientId(a.getPatient().getId())
                                 .doctorName(a.getDoctorName())
+                                .patientName(a.getPatient().getName())
                                 .specialty(a.getSpecialty())
                                 .clinic(a.getClinic())
                                 .appointmentDate(a.getAppointmentDate())

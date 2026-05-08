@@ -4,6 +4,7 @@ import com.medical.app.dto.AuthRequest;
 import com.medical.app.dto.AuthResponse;
 import com.medical.app.dto.DoctorDTO;
 import com.medical.app.dto.DoctorSignupRequest;
+import com.medical.app.dto.DoctorUpdateRequest;
 import com.medical.app.service.DoctorService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +42,13 @@ public class DoctorController {
     @GetMapping("/{id}")
     public ResponseEntity<DoctorDTO> getDoctorById(@PathVariable Long id) {
         return ResponseEntity.ok(doctorService.getDoctorById(id));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<DoctorDTO> updateDoctor(
+            @PathVariable Long id,
+            @RequestBody DoctorUpdateRequest req) {
+        return ResponseEntity.ok(doctorService.updateDoctor(id, req));
     }
 
     // GET /api/doctors/specialties

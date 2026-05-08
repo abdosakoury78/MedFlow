@@ -291,6 +291,15 @@
   cursor: pointer;
 }
 
+.btn-tertiary {
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
 .btn-primary {
   background: var(--primary);
   color: white;
@@ -332,4 +341,30 @@ app-navbar {
     grid-column: 1 / -1;
     max-width: 400px;
   }
+}
+
+/* Inline inputs for quick editing */
+.inline-input {
+  font-size: 16px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.06);
+  color: white;
+}
+
+.small-input {
+  font-size: 14px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.autosave-status {
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--text-muted);
+  display: flex;
+  gap: 8px;
+  align-items: center;
 }

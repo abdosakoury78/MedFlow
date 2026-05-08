@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { AuthResponse, Doctor, DoctorSignupRequest, LoginCredentials } from '../shared/models/data';
+import { AuthResponse, Doctor, DoctorProfileUpdateRequest, DoctorSignupRequest, LoginCredentials } from '../shared/models/data';
 
 
 @Injectable({
@@ -66,5 +66,13 @@ export class DoctorService {
   // =====================
   loginDoctor(credentials: LoginCredentials): Observable<AuthResponse<Doctor>> {
     return this.http.post<AuthResponse<Doctor>>(`${this.baseUrl}/login`, credentials);
+  }
+
+  // =====================
+  // UPDATE DOCTOR
+  // PUT /api/doctors/:id
+  // =====================
+  updateDoctor(id: number, dto: DoctorProfileUpdateRequest): Observable<Doctor> {
+    return this.http.put<Doctor>(`${this.baseUrl}/${id}`, dto);
   }
 }

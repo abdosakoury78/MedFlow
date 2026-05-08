@@ -32,7 +32,7 @@
           </button>
 
           <!-- Profile -->
-          <button class="icon-btn" (click)="goToProfile()">
+          <button class="icon-btn" title="Open profile" (click)="goToProfile()">
             <i class="fa-solid fa-user"></i>
           </button>
         </div>
@@ -46,7 +46,11 @@
       <!-- Doctor Card -->
       <section class="doctor-card">
         <div class="profile-avatar">
-          <img [src]="doctor.avatar" [alt]="doctor.name" />
+          <img
+            [src]="doctor.avatar"
+            [alt]="doctor.name"
+            title="Doctor avatar"
+          />
         </div>
         <div class="doctor-info">
           <h2>{{ doctor.name }}</h2>
@@ -102,9 +106,8 @@
             <div class="appointment-avatar">🧑</div>
 
             <div class="appointment-info">
-              <!-- FIXED: was appt.patientName / appt.appointmentType — those were mock fields.
-                   Real Appointment DTO has doctorName, specialty, appointmentTime -->
-              <h3>{{ appt.doctorName }}</h3>
+              <!-- Doctor-facing view should show the patient for each appointment. -->
+              <h3>{{ appt.patientName }}</h3>
 
               <p>{{ appt.specialty }}</p>
 

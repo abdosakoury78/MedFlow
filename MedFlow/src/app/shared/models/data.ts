@@ -29,6 +29,7 @@ export interface Appointment {
   doctorId: number;
   patientId: number;
   doctorName: string;
+  patientName?: string;
   specialty: string;
   clinic: string;
   appointmentDate: string;   // LocalDate serialized as "YYYY-MM-DD"
@@ -108,6 +109,18 @@ export interface DoctorSignupRequest {
   bio?: string;
   consultationFee?: number;
   isOnline?: boolean;
+  specialtyTags?: string[];
+  workingHours?: WorkingHour[];
+}
+
+export interface DoctorProfileUpdateRequest {
+  name?: string;
+  specialty?: string;
+  experience?: number;
+  avatar?: string;
+  bio?: string;
+  consultationFee?: number;
+  online?: boolean;
   specialtyTags?: string[];
   workingHours?: WorkingHour[];
 }
