@@ -69,6 +69,49 @@ export interface LoginCredentials {
   password: string;
 }
 
+export interface NotificationItem {
+  id: number;
+  title: string;
+  time: string;
+  icon: string;
+  read: boolean;
+  createdAt: string;
+}
+
+export interface AuthResponse<T> {
+  message: string;
+  user: T;
+}
+
+export interface PatientSignupRequest {
+  name: string;
+  email: string;
+  password: string;
+  phone?: string;
+  location?: string;
+  age?: number;
+  blood?: string;
+  gender?: string;
+  avatar?: string | null;
+}
+
+export interface DoctorSignupRequest {
+  name: string;
+  specialty: string;
+  email: string;
+  password: string;
+  experience?: number;
+  rating?: number;
+  reviews?: number;
+  patientsCount?: number;
+  avatar?: string;
+  bio?: string;
+  consultationFee?: number;
+  isOnline?: boolean;
+  specialtyTags?: string[];
+  workingHours?: WorkingHour[];
+}
+
 export interface DoctorAppointment {
   id: number;
   patientName: string;

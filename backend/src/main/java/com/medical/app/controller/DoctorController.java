@@ -1,13 +1,17 @@
 package com.medical.app.controller;
 
-import com.medical.app.dto.CreateDoctorDTO;
+import com.medical.app.dto.AuthRequest;
+import com.medical.app.dto.AuthResponse;
 import com.medical.app.dto.DoctorDTO;
+import com.medical.app.dto.DoctorSignupRequest;
 import com.medical.app.service.DoctorService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -51,10 +55,20 @@ public class DoctorController {
         return ResponseEntity.ok(doctorService.getOnlineDoctors());
     }
 
-    @PostMapping
-    public ResponseEntity<DoctorDTO> createDoctor(
-            @RequestBody CreateDoctorDTO dto) {
-        DoctorDTO created = doctorService.createDoctor(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    @PostMapping("/signup")
+    public ResponseEntity<AuthResponse<DoctorDTO>> signupDoctor(
+            @Valid @RequestBody DoctorSignupRequest
+
+            req) {
+        AuthResponse<DoctorDTO> response = doctorService.createDoctor(req);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<AuthResponse<DoctorDTO>> loginDoctor(
+            @Valid @RequestBody AuthRequest req) {
+
+        AuthResponse<DoctorDTO> response = doctorService.loginDoctor(req);
+        return ResponseEntity.ok(response);
     }
 }

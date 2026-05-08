@@ -2,16 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SidebarComponent } from '../../shared/components/sidebar/sidebar.component';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
+import { NotificationComponent } from '../../shared/components/notification/notification.component';
 import { Doctor, Appointment } from '../../shared/models/data';
 import { DoctorService } from '../../services/doctor.service';
 import { AppointmentService } from '../../services/appointment.service';
 import { AuthService } from '../../services/auth.service';
+import { NotificationService } from '../../services/notification.service';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-doctor-dashboard',
   standalone: true,
-  imports: [CommonModule, SidebarComponent, NavbarComponent],
+  imports: [CommonModule, SidebarComponent, NavbarComponent, NotificationComponent],
   templateUrl: './doctor-dashboard.component.html',
   styleUrls: ['./doctor-dashboard.component.css']
 })
@@ -20,6 +22,7 @@ export class DoctorDashboardComponent implements OnInit {
   doctor?: Doctor;
   todayAppointments: Appointment[] = [];
   loading = true;
+  showNotifications = false;
 
   stats: { title: string; value: any; icon: string }[] = [];
 
@@ -27,7 +30,8 @@ export class DoctorDashboardComponent implements OnInit {
     private doctorService: DoctorService,
     private appointmentService: AppointmentService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -48,16 +52,26 @@ export class DoctorDashboardComponent implements OnInit {
       error: () => { this.loading = false; }
     });
 
-    this.appointmentService.getTodayAppointments(doctorId).subscribe({
-      next: (appts) => { this.todayAppointments = appts; },
-      error: () => {}
-    });
+     this.appointmentService.getTodayAppointmentsForDoctor(doctorId).subscribe({
+       next: (appts) => {
+         this.todayAppointments = appts;
+       },
+       error: () => {}
+     });
+
+    this.notificationService.loadUnreadCount().subscribe({ error: () => {} });
   }
 
-  showNotifications = false;
+  get unreadCount$() {
+    return this.notificationService.unreadCount$;
+  }
 
   toggleNotifications() {
     this.showNotifications = !this.showNotifications;
+  }
+
+  closeNotifications() {
+    this.showNotifications = false;
   }
 
   goToProfile() {

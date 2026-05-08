@@ -24,6 +24,16 @@ export class AppointmentService {
   }
 
   // =====================
+  // TODAY APPOINTMENTS FOR DOCTOR
+  // GET /api/appointments/doctor/:id/today
+  // =====================
+  getTodayAppointmentsForDoctor(doctorId: number): Observable<Appointment[]> {
+    return this.http.get<Appointment[]>(
+      `${this.baseUrl}/doctor/${doctorId}/today`
+    );
+  }
+
+  // =====================
   // UPCOMING APPOINTMENTS
   // GET /api/appointments/patient/:id/upcoming
   // =====================
@@ -55,10 +65,7 @@ export class AppointmentService {
   // CANCEL APPOINTMENT
   // PATCH /api/appointments/:id/cancel
   // =====================
-  cancelAppointment(id: number): Observable<void> {
-    return this.http.patch<void>(
-      `${this.baseUrl}/${id}/cancel`,
-      {}
-    );
+  cancelAppointment(id: number): Observable<Appointment> {
+    return this.http.patch<Appointment>(`${this.baseUrl}/${id}/cancel`, {});
   }
 }

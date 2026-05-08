@@ -79,6 +79,28 @@
   background: #fee2e2;
 }
 
+.mark-read-btn {
+  background: #f0fdf4;
+  color: #16a34a;
+
+  border: none;
+
+  padding: 8px 12px;
+
+  border-radius: 10px;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.mark-read-btn:hover {
+  background: #dcfce7;
+}
+
 .close-btn {
   width: 34px;
   height: 34px;

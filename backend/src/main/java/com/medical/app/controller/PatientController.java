@@ -1,8 +1,13 @@
 package com.medical.app.controller;
 
+import com.medical.app.dto.AuthRequest;
+import com.medical.app.dto.AuthResponse;
 import com.medical.app.dto.PatientDTO;
+import com.medical.app.dto.PatientSignupRequest;
 import com.medical.app.service.PatientService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,9 +32,18 @@ public class PatientController {
     }
 
     // POST /api/patients
-    @PostMapping
-    public ResponseEntity<PatientDTO> createPatient(@RequestBody PatientDTO dto) {
-        return ResponseEntity.ok(patientService.createPatient(dto));
+    @PostMapping("/signup")
+    public ResponseEntity<AuthResponse<PatientDTO>> signupPatient(
+            @Valid @RequestBody PatientSignupRequest req) {
+        AuthResponse<PatientDTO> response = patientService.createPatient(req);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<AuthResponse<PatientDTO>> loginPatient(
+            @Valid @RequestBody AuthRequest req) {
+        AuthResponse<PatientDTO> response = patientService.loginPatient(req);
+        return ResponseEntity.ok(response);
     }
 
     // PUT /api/patients/{id}

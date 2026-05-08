@@ -28,6 +28,9 @@ public class Doctor {
     @Column(nullable = false, length = 150, unique = true)
     private String email;
 
+    @Column(nullable = false, length = 255)
+    private String password;
+
     private Integer experience;
 
     @Column(precision = 3, scale = 1)

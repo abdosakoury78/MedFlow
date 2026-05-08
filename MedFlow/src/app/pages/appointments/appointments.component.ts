@@ -34,7 +34,7 @@ export class AppointmentsComponent implements OnInit {
     });
 
     this.appointmentService.getUpcomingAppointments(patientId).subscribe({
-      next: (appts) => this.upcomingAppointments = appts,
+      next: (appts) => { this.upcomingAppointments = appts; },
       error: () => {}
     });
   }

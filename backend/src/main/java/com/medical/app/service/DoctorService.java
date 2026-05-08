@@ -1,14 +1,20 @@
 package com.medical.app.service;
 
-import com.medical.app.dto.CreateDoctorDTO;
+import com.medical.app.dto.AuthRequest;
+import com.medical.app.dto.AuthResponse;
 import com.medical.app.dto.DoctorDTO;
+import com.medical.app.dto.DoctorSignupRequest;
 import com.medical.app.dto.WorkingHourDTO;
 import com.medical.app.entity.Doctor;
 import com.medical.app.entity.DoctorSpecialty;
 import com.medical.app.entity.DoctorWorkingHour;
 import com.medical.app.repository.DoctorRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,6 +23,7 @@ import java.util.stream.Collectors;
 public class DoctorService {
 
         private final DoctorRepository doctorRepository;
+        private final PasswordEncoder passwordEncoder;
 
         // ── Get all doctors ──────────────────────────────
         public List<DoctorDTO> getAllDoctors() {
@@ -95,13 +102,17 @@ public class DoctorService {
                                 .build();
         }
 
-        public DoctorDTO createDoctor(CreateDoctorDTO req) {
-
+        public AuthResponse<DoctorDTO> createDoctor(DoctorSignupRequest req) {
+                if (doctorRepository.existsByEmail(req.getEmail())) {
+                        throw new ResponseStatusException(
+                                        HttpStatus.CONFLICT, "Email already registered: " + req.getEmail());
+                }
                 // 1. Build the Doctor entity
                 Doctor doctor = Doctor.builder()
                                 .name(req.getName())
                                 .specialty(req.getSpecialty())
                                 .email(req.getEmail())
+                                .password(passwordEncoder.encode(req.getPassword()))
                                 .experience(req.getExperience())
                                 .rating(req.getRating())
                                 .reviews(req.getReviews())
@@ -140,6 +151,25 @@ public class DoctorService {
 
                 // 4. Save and return DTO
                 Doctor saved = doctorRepository.save(doctor);
-                return toDTO(saved);
+                return AuthResponse.<DoctorDTO>builder()
+                                .message("Doctor registered successfully")
+                                .user(toDTO(saved))
+                                .build();
+        }
+
+        // ── Doctor login ─────────────────────────────────
+        public AuthResponse<DoctorDTO> loginDoctor(AuthRequest req) {
+                Doctor doctor = doctorRepository.findByEmail(req.getEmail())
+                                .orElseThrow(() -> new ResponseStatusException(
+                                                HttpStatus.UNAUTHORIZED, "Invalid email or password"));
+
+                if (!passwordEncoder.matches(req.getPassword(), doctor.getPassword())) {
+                        throw new ResponseStatusException(
+                                        HttpStatus.UNAUTHORIZED, "Invalid email or password");
+                }
+                return AuthResponse.<DoctorDTO>builder()
+                                .message("Doctor logged in successfully")
+                                .user(toDTO(doctor))
+                                .build();
         }
 }

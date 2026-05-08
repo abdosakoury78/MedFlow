@@ -18,92 +18,106 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AppointmentService {
 
-    private final AppointmentRepository appointmentRepository;
-    private final PatientRepository patientRepository;
-    private final DoctorRepository doctorRepository;
+        private final AppointmentRepository appointmentRepository;
+        private final PatientRepository patientRepository;
+        private final DoctorRepository doctorRepository;
+        private final NotificationService notificationService;
 
-    // ── All appointments for a patient ───────────────
-    public List<AppointmentDTO> getPatientAppointments(Long patientId) {
-        return appointmentRepository.findByPatientId(patientId)
-                .stream().map(this::toDTO).collect(Collectors.toList());
-    }
+        // ── All appointments for a patient ───────────────
+        public List<AppointmentDTO> getPatientAppointments(Long patientId) {
+                return appointmentRepository.findByPatientId(patientId)
+                                .stream().map(this::toDTO).collect(Collectors.toList());
+        }
 
-    // ── Today's appointments ─────────────────────────
-    public List<AppointmentDTO> getTodayAppointments(Long patientId) {
-        return appointmentRepository
-                .findByPatientIdAndAppointmentDate(patientId, LocalDate.now())
-                .stream().map(this::toDTO).collect(Collectors.toList());
-    }
+         // ── Today's appointments ─────────────────────────
+         public List<AppointmentDTO> getTodayAppointments(Long patientId) {
+                 return appointmentRepository
+                                 .findByPatientIdAndAppointmentDate(patientId, LocalDate.now())
+                                 .stream().map(this::toDTO).collect(Collectors.toList());
+         }
 
-    // ── Upcoming appointments ────────────────────────
-    public List<AppointmentDTO> getUpcomingAppointments(Long patientId) {
-        return appointmentRepository
-                .findUpcomingByPatient(patientId, LocalDate.now())
-                .stream().map(this::toDTO).collect(Collectors.toList());
-    }
+         // ── Today's appointments for a doctor ─────────────────────────
+         public List<AppointmentDTO> getTodayAppointmentsForDoctor(Long doctorId) {
+                 return appointmentRepository
+                                 .findByDoctorIdAndAppointmentDate(doctorId, LocalDate.now())
+                                 .stream().map(this::toDTO).collect(Collectors.toList());
+         }
 
-    // ── Appointment history (COMPLETED) ─────────────
-    public List<AppointmentDTO> getHistory(Long patientId) {
-        return appointmentRepository
-                .findByPatientIdAndStatus(patientId, "COMPLETED")
-                .stream().map(this::toDTO).collect(Collectors.toList());
-    }
+        // ── Upcoming appointments ────────────────────────
+        public List<AppointmentDTO> getUpcomingAppointments(Long patientId) {
+                return appointmentRepository
+                                .findUpcomingByPatient(patientId, LocalDate.now())
+                                .stream().map(this::toDTO).collect(Collectors.toList());
+        }
 
-    // ── Book a new appointment ───────────────────────
-    public AppointmentDTO createAppointment(CreateAppointmentDTO req) {
-        Patient patient = patientRepository.findById(req.getPatientId())
-                .orElseThrow(() -> new RuntimeException("Patient not found"));
-        Doctor doctor = doctorRepository.findById(req.getDoctorId())
-                .orElseThrow(() -> new RuntimeException("Doctor not found"));
+        // ── Appointment history (COMPLETED) ─────────────
+        public List<AppointmentDTO> getHistory(Long patientId) {
+                return appointmentRepository
+                                .findByPatientIdAndStatus(patientId, "COMPLETED")
+                                .stream().map(this::toDTO).collect(Collectors.toList());
+        }
 
-        Appointment appointment = Appointment.builder()
-                .patient(patient)
-                .doctor(doctor)
-                .doctorName(doctor.getName())
-                .specialty(doctor.getSpecialty())
-                .clinic(req.getClinic())
-                .appointmentDate(req.getAppointmentDate())
-                .appointmentTime(req.getAppointmentTime())
-                .duration(req.getDuration() != null ? req.getDuration() : 30)
-                .status("UPCOMING")
-                .icon(req.getIcon())
-                .iconBg(req.getIconBg())
-                .build();
+        // ── Book a new appointment ───────────────────────
+        public AppointmentDTO createAppointment(CreateAppointmentDTO req) {
+                Patient patient = patientRepository.findById(req.getPatientId())
+                                .orElseThrow(() -> new RuntimeException("Patient not found"));
+                Doctor doctor = doctorRepository.findById(req.getDoctorId())
+                                .orElseThrow(() -> new RuntimeException("Doctor not found"));
 
-        return toDTO(appointmentRepository.save(appointment));
-    }
+                Appointment appointment = Appointment.builder()
+                                .patient(patient)
+                                .doctor(doctor)
+                                .doctorName(doctor.getName())
+                                .specialty(doctor.getSpecialty())
+                                .clinic(req.getClinic())
+                                .appointmentDate(req.getAppointmentDate())
+                                .appointmentTime(req.getAppointmentTime())
+                                .duration(req.getDuration() != null ? req.getDuration() : 30)
+                                .status("UPCOMING")
+                                .icon(req.getIcon())
+                                .iconBg(req.getIconBg())
+                                .build();
 
-    // ── Cancel an appointment ────────────────────────
-    public AppointmentDTO cancelAppointment(Long appointmentId) {
-        Appointment appointment = appointmentRepository.findById(appointmentId)
-                .orElseThrow(() -> new RuntimeException("Appointment not found"));
-        appointment.setStatus("CANCELLED");
-        return toDTO(appointmentRepository.save(appointment));
-    }
+                Appointment saved = appointmentRepository.save(appointment);
+                notificationService.createAppointmentBookedNotifications(saved);
+                return toDTO(saved);
+        }
 
-    // ── Complete an appointment ──────────────────────
-    public AppointmentDTO completeAppointment(Long appointmentId) {
-        Appointment appointment = appointmentRepository.findById(appointmentId)
-                .orElseThrow(() -> new RuntimeException("Appointment not found"));
-        appointment.setStatus("COMPLETED");
-        return toDTO(appointmentRepository.save(appointment));
-    }
+        // ── Cancel an appointment ────────────────────────
+        public AppointmentDTO cancelAppointment(Long appointmentId) {
+                Appointment appointment = appointmentRepository.findById(appointmentId)
+                                .orElseThrow(() -> new RuntimeException("Appointment not found"));
+                appointment.setStatus("CANCELLED");
+                Appointment saved = appointmentRepository.save(appointment);
+                notificationService.createAppointmentCancelledNotifications(saved);
+                return toDTO(saved);
+        }
 
-    // ── Entity → DTO ─────────────────────────────────
-    private AppointmentDTO toDTO(Appointment a) {
-        return AppointmentDTO.builder()
-                .id(a.getId())
-                .doctorId(a.getDoctor().getId())
-                .patientId(a.getPatient().getId())
-                .doctorName(a.getDoctorName())
-                .specialty(a.getSpecialty())
-                .clinic(a.getClinic())
-                .appointmentDate(a.getAppointmentDate())
-                .appointmentTime(a.getAppointmentTime())
-                .duration(a.getDuration())
-                .status(a.getStatus())
-                .icon(a.getIcon())
-                .iconBg(a.getIconBg())
-                .build();
-    }
+        // ── Complete an appointment ──────────────────────
+        public AppointmentDTO completeAppointment(Long appointmentId) {
+                Appointment appointment = appointmentRepository.findById(appointmentId)
+                                .orElseThrow(() -> new RuntimeException("Appointment not found"));
+                appointment.setStatus("COMPLETED");
+                Appointment saved = appointmentRepository.save(appointment);
+                notificationService.createAppointmentCompletedNotifications(saved);
+                return toDTO(saved);
+        }
+
+        // ── Entity → DTO ─────────────────────────────────
+        private AppointmentDTO toDTO(Appointment a) {
+                return AppointmentDTO.builder()
+                                .id(a.getId())
+                                .doctorId(a.getDoctor().getId())
+                                .patientId(a.getPatient().getId())
+                                .doctorName(a.getDoctorName())
+                                .specialty(a.getSpecialty())
+                                .clinic(a.getClinic())
+                                .appointmentDate(a.getAppointmentDate())
+                                .appointmentTime(a.getAppointmentTime())
+                                .duration(a.getDuration())
+                                .status(a.getStatus())
+                                .icon(a.getIcon())
+                                .iconBg(a.getIconBg())
+                                .build();
+        }
 }

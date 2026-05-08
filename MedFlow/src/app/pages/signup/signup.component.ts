@@ -142,6 +142,7 @@ export class SignupComponent {
       const payload: any = {
         name: this.step1.name,
         email: this.step1.email,
+        password: this.step1.password,
         phone: this.patientForm.phone || '',
         location: this.patientForm.location || '',
         age: this.patientForm.age || 0,
@@ -163,6 +164,7 @@ export class SignupComponent {
       const payload: any = {
         name: this.step1.name,
         email: this.step1.email,
+        password: this.step1.password,
         specialty: this.doctorForm.specialty || '',
         experience: this.doctorForm.experience || 0,
         consultationFee: this.doctorForm.consultationFee || 0,

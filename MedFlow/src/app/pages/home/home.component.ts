@@ -9,6 +9,7 @@ import { DoctorService } from '../../services/doctor.service';
 import { AppointmentService } from '../../services/appointment.service';
 import { PatientService } from '../../services/patient.service';
 import { AuthService } from '../../services/auth.service';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-home',
@@ -31,7 +32,8 @@ export class HomeComponent implements OnInit {
     private doctorService: DoctorService,
     private appointmentService: AppointmentService,
     private patientService: PatientService,
-    private authService: AuthService
+    private authService: AuthService,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -56,12 +58,18 @@ export class HomeComponent implements OnInit {
         },
         error: () => {}
       });
+
+      this.notificationService.loadUnreadCount().subscribe({ error: () => {} });
     }
 
     this.doctorService.getOnlineDoctors().subscribe({
       next: (docs) => { this.doctors = docs; this.loading = false; },
       error: () => { this.loading = false; }
     });
+  }
+
+  get unreadCount$() {
+    return this.notificationService.unreadCount$;
   }
 
   navigateToDoctor(id: number): void { this.router.navigate(['/doctor', id]); }

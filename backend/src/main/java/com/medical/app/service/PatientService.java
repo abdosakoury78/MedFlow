@@ -1,10 +1,17 @@
 package com.medical.app.service;
 
+import com.medical.app.dto.AuthRequest;
+import com.medical.app.dto.AuthResponse;
 import com.medical.app.dto.PatientDTO;
+import com.medical.app.dto.PatientSignupRequest;
 import com.medical.app.entity.Patient;
 import com.medical.app.repository.PatientRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,6 +20,7 @@ import java.util.stream.Collectors;
 public class PatientService {
 
     private final PatientRepository patientRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public List<PatientDTO> getAllPatients() {
         return patientRepository.findAll()
@@ -31,18 +39,27 @@ public class PatientService {
         return toDTO(patient);
     }
 
-    public PatientDTO createPatient(PatientDTO dto) {
+    public AuthResponse<PatientDTO> createPatient(PatientSignupRequest req) {
+        if (patientRepository.existsByEmail(req.getEmail())) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT, "Email already registered: " + req.getEmail());
+        }
         Patient patient = Patient.builder()
-                .name(dto.getName())
-                .email(dto.getEmail())
-                .phone(dto.getPhone())
-                .location(dto.getLocation())
-                .age(dto.getAge())
-                .blood(dto.getBlood())
-                .gender(dto.getGender())
-                .avatar(dto.getAvatar())
+                .name(req.getName())
+                .email(req.getEmail())
+                .password(passwordEncoder.encode(req.getPassword()))
+                .phone(req.getPhone())
+                .location(req.getLocation())
+                .age(req.getAge())
+                .blood(req.getBlood())
+                .gender(req.getGender())
+                .avatar(req.getAvatar())
                 .build();
-        return toDTO(patientRepository.save(patient));
+        Patient saved = patientRepository.save(patient);
+        return AuthResponse.<PatientDTO>builder()
+                .message("Patient registered successfully")
+                .user(toDTO(saved))
+                .build();
     }
 
     public PatientDTO updatePatient(Long id, PatientDTO dto) {
@@ -57,6 +74,21 @@ public class PatientService {
         patient.setGender(dto.getGender());
         patient.setAvatar(dto.getAvatar());
         return toDTO(patientRepository.save(patient));
+    }
+
+    public AuthResponse<PatientDTO> loginPatient(AuthRequest req) {
+        Patient patient = patientRepository.findByEmail(req.getEmail())
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.UNAUTHORIZED, "Invalid email or password"));
+
+        if (!passwordEncoder.matches(req.getPassword(), patient.getPassword())) {
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED, "Invalid email or password");
+        }
+        return AuthResponse.<PatientDTO>builder()
+                .message("Patient logged in successfully")
+                .user(toDTO(patient))
+                .build();
     }
 
     private PatientDTO toDTO(Patient p) {

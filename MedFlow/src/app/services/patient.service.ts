@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { Patient } from '../shared/models/data';
+import { AuthResponse, LoginCredentials, Patient, PatientSignupRequest } from '../shared/models/data';
 
 @Injectable({
   providedIn: 'root'
@@ -31,10 +31,18 @@ export class PatientService {
 
   // =====================
   // CREATE PATIENT
-  // POST /api/patients
+  // POST /api/patients/signup
   // =====================
-  createPatient(dto: Patient): Observable<Patient> {
-    return this.http.post<Patient>(this.baseUrl, dto);
+  createPatient(dto: PatientSignupRequest): Observable<AuthResponse<Patient>> {
+    return this.http.post<AuthResponse<Patient>>(`${this.baseUrl}/signup`, dto);
+  }
+
+  // =====================
+  // LOGIN PATIENT
+  // POST /api/patients/login
+  // =====================
+  loginPatient(credentials: LoginCredentials): Observable<AuthResponse<Patient>> {
+    return this.http.post<AuthResponse<Patient>>(`${this.baseUrl}/login`, credentials);
   }
 
   // =====================

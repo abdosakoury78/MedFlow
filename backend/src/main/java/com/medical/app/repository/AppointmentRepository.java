@@ -21,6 +21,10 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     List<Appointment> findByPatientIdAndAppointmentDate(
             Long patientId, LocalDate date);
 
+    // Today's appointments for a doctor
+    List<Appointment> findByDoctorIdAndAppointmentDate(
+            Long doctorId, LocalDate date);
+
     // Upcoming appointments (date >= today)
     @Query("SELECT a FROM Appointment a WHERE a.patient.id = :patientId " +
            "AND a.appointmentDate >= :today AND a.status = 'UPCOMING' " +

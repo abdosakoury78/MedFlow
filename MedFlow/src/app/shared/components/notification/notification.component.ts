@@ -1,13 +1,9 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-interface Notification {
-  id: number;
-  title: string;
-  time: string;
-  icon: string;
-  read: boolean;
-}
+import { Subscription } from 'rxjs';
+import { NotificationItem } from '../../models/data';
+import { AuthService } from '../../../services/auth.service';
+import { NotificationService } from '../../../services/notification.service';
 
 @Component({
   selector: 'app-notification',
@@ -16,36 +12,40 @@ interface Notification {
   templateUrl: './notification.component.html',
   styleUrls: ['./notification.component.css']
 })
-export class NotificationComponent {
+export class NotificationComponent implements OnInit, OnDestroy {
 
   @Output() close = new EventEmitter<void>();
 
-  notifications: Notification[] = [
-    {
-      id: 1,
-      title: 'New appointment booked with Dr. Sarah',
-      time: '2 min ago',
-      icon: 'fa-calendar-check',
-      read: false
-    },
-    {
-      id: 2,
-      title: 'Appointment confirmed',
-      time: '1 hour ago',
-      icon: 'fa-circle-check',
-      read: true
-    },
-    {
-      id: 3,
-      title: 'Reminder: Appointment tomorrow',
-      time: '3 hours ago',
-      icon: 'fa-bell',
-      read: false
+  notifications: NotificationItem[] = [];
+  private subscription?: Subscription;
+
+  constructor(
+    private notificationService: NotificationService,
+    private authService: AuthService
+  ) {}
+
+  ngOnInit(): void {
+    this.subscription = this.notificationService.notifications$.subscribe((notifications) => {
+      this.notifications = notifications;
+    });
+
+    if (this.authService.isLoggedIn()) {
+      this.notificationService.loadNotifications().subscribe({
+        error: () => {}
+      });
     }
-  ];
+  }
+
+  ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
+  }
 
   clearAll(): void {
-    this.notifications = [];
+    this.notificationService.clearAll().subscribe();
+  }
+
+  markAllAsRead(): void {
+    this.notificationService.markAllAsRead().subscribe();
   }
 
   closePanel(): void {

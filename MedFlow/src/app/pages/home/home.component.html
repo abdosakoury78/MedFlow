@@ -1,11 +1,9 @@
 <div class="app-layout">
-
   <!-- Sidebar -->
   <app-sidebar></app-sidebar>
 
   <!-- Main Content -->
   <div class="main-content">
-
     <!-- Mobile Header -->
     <header class="mobile-header">
       <div class="header-left">
@@ -16,6 +14,13 @@
       </div>
       <button class="notif-btn" (click)="toggleNotifications()">
         <i class="fa-solid fa-bell"></i>
+        <span
+          class="notif-badge"
+          *ngIf="unreadCount$ | async as unreadCount"
+          [class.hidden]="unreadCount === 0"
+        >
+          {{ unreadCount }}
+        </span>
       </button>
     </header>
 
@@ -26,17 +31,23 @@
 
     <!-- Scrollable Page -->
     <div class="page-content">
-
       <!-- Desktop Top Bar -->
       <div class="desktop-topbar">
         <div class="topbar-greeting">
           <span class="topbar-sub">Good morning,</span>
-          <h1 class="topbar-name">{{ patient?.name || 'User' }}</h1>
+          <h1 class="topbar-name">{{ patient?.name || "User" }}</h1>
         </div>
 
         <div class="topbar-actions">
           <button class="topbar-notif" (click)="toggleNotifications()">
             <i class="fa-solid fa-bell"></i>
+            <span
+              class="notif-badge"
+              *ngIf="unreadCount$ | async as unreadCount"
+              [class.hidden]="unreadCount === 0"
+            >
+              {{ unreadCount }}
+            </span>
           </button>
           <button class="topbar-notif" (click)="navigateToProfile()">
             <i class="fa-solid fa-user"></i>
@@ -47,8 +58,8 @@
       <!-- Hero -->
       <div class="hero-banner">
         <p class="hero-greeting">Good morning,</p>
-        <h2 class="hero-name">{{ patient?.name || 'User' }}</h2>
-        <p class="hero-date">{{ today | date: 'fullDate' }}</p>
+        <h2 class="hero-name">{{ patient?.name || "User" }}</h2>
+        <p class="hero-date">{{ today | date: "fullDate" }}</p>
       </div>
 
       <!-- Loading state -->
@@ -58,7 +69,6 @@
 
       <!-- Content -->
       <div class="content-wrap" *ngIf="!loading">
-
         <!-- Appointments -->
         <section class="section">
           <h3 class="section-title">Upcoming Appointments</h3>
@@ -106,7 +116,9 @@
             </button>
 
             <button class="quick-action-btn" routerLink="/doctors">
-              <div class="qa-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+              <div class="qa-icon">
+                <i class="fa-solid fa-magnifying-glass"></i>
+              </div>
               <span>Find Doctor</span>
             </button>
 
@@ -131,9 +143,9 @@
               *ngFor="let doc of doctors"
               (click)="navigateToDoctor(doc.id)"
             >
-            <div class="doc-avatar">
-              <img [src]="doc.avatar" [alt]="doc.name">
-            </div>
+              <div class="doc-avatar">
+                <img [src]="doc.avatar" [alt]="doc.name" />
+              </div>
 
               <div class="doc-info">
                 <div class="doc-name">{{ doc.name }}</div>
@@ -147,13 +159,10 @@
             </div>
           </div>
         </section>
-
       </div>
-
     </div>
 
     <!-- Mobile Bottom Navbar -->
     <app-navbar activePage="home"></app-navbar>
-
   </div>
 </div>

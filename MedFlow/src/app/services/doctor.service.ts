@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { Doctor } from '../shared/models/data';
+import { AuthResponse, Doctor, DoctorSignupRequest, LoginCredentials } from '../shared/models/data';
 
 
 @Injectable({
@@ -56,7 +56,15 @@ export class DoctorService {
     return this.http.get<Doctor[]>(`${this.baseUrl}/online`);
   }
 
-  createDoctor(dto: Doctor): Observable<Doctor> {
-    return this.http.post<Doctor>(this.baseUrl, dto);
+  createDoctor(dto: DoctorSignupRequest): Observable<AuthResponse<Doctor>> {
+    return this.http.post<AuthResponse<Doctor>>(`${this.baseUrl}/signup`, dto);
+  }
+
+  // =====================
+  // LOGIN DOCTOR
+  // POST /api/doctors/login
+  // =====================
+  loginDoctor(credentials: LoginCredentials): Observable<AuthResponse<Doctor>> {
+    return this.http.post<AuthResponse<Doctor>>(`${this.baseUrl}/login`, credentials);
   }
 }

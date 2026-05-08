@@ -22,6 +22,9 @@ public class Patient {
     @Column(nullable = false, unique = true, length = 255)
     private String email;
 
+    @Column(nullable = false, length = 255)
+    private String password;
+
     @Column(length = 50)
     private String phone;
 

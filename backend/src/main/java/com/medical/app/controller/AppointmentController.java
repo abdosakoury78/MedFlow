@@ -48,6 +48,14 @@ public class AppointmentController {
                 appointmentService.getHistory(patientId));
     }
 
+    // GET /api/appointments/doctor/{doctorId}/today
+    @GetMapping("/doctor/{doctorId}/today")
+    public ResponseEntity<List<AppointmentDTO>> getTodayAppointmentsForDoctor(
+            @PathVariable Long doctorId) {
+        return ResponseEntity.ok(
+                appointmentService.getTodayAppointmentsForDoctor(doctorId));
+    }
+
     // POST /api/appointments
     @PostMapping
     public ResponseEntity<AppointmentDTO> createAppointment(

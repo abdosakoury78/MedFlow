@@ -48,28 +48,22 @@ export class LoginComponent {
     }
 
     if (this.selectedRole === 'PATIENT') {
-      this.patientService.getPatientByEmail(this.email).subscribe({
-        next: (user) => {
-          this.authService.setUser({ id: user.id, email: user.email, role: 'PATIENT' });
+      this.patientService.loginPatient({ email: this.email, password: this.password }).subscribe({
+        next: (response) => {
+          this.authService.setUser({ id: response.user.id, email: response.user.email, role: 'PATIENT' });
           this.showAlert('Login successful!', 'success');
           setTimeout(() => this.router.navigate(['/home']), 1000);
         },
-        error: () => this.showAlert('Patient not found', 'error')
+        error: (err) => this.showAlert(err?.error?.message || 'Patient login failed', 'error')
       });
     } else {
-      // Doctor login: search by email via getAllDoctors + search
-      this.doctorService.getAllDoctors().subscribe({
-        next: (doctors) => {
-          const doctor = doctors.find(d => d.email?.toLowerCase() === this.email.toLowerCase());
-          if (doctor) {
-            this.authService.setUser({ id: doctor.id, email: doctor.email || this.email, role: 'DOCTOR' });
-            this.showAlert('Login successful!', 'success');
-            setTimeout(() => this.router.navigate(['/dashboard']), 1000);
-          } else {
-            this.showAlert('Doctor account not found', 'error');
-          }
+      this.doctorService.loginDoctor({ email: this.email, password: this.password }).subscribe({
+        next: (response) => {
+          this.authService.setUser({ id: response.user.id, email: response.user.email, role: 'DOCTOR' });
+          this.showAlert('Login successful!', 'success');
+          setTimeout(() => this.router.navigate(['/dashboard']), 1000);
         },
-        error: () => this.showAlert('Login failed', 'error')
+        error: (err) => this.showAlert(err?.error?.message || 'Doctor login failed', 'error')
       });
     }
   }
