@@ -26,7 +26,7 @@ export class FindDoctorComponent implements OnInit {
 
   ngOnInit(): void {
     this.doctorService.getSpecialties().subscribe({
-      next: (specs) => this.specialties = ['All', ...specs],
+      next: (specs) => this.specialties = [...specs],
       error: () => {}
     });
 
@@ -42,22 +42,22 @@ export class FindDoctorComponent implements OnInit {
 
   filterDoctors() {
     // Use backend search when searchTerm changes
-    // if (this.searchTerm.trim()) {
-    //   this.doctorService.getAllDoctors(undefined, this.searchTerm).subscribe({
-    //     next: (docs) => this.filteredDoctors = docs
-    //   });
-    // } else {
-    //   this.applyLocalFilter();
-    // }
+    if (this.searchTerm.trim()) {
+      this.doctorService.getAllDoctors(undefined, this.searchTerm).subscribe({
+        next: (docs) => this.filteredDoctors = docs
+      });
+    } else {
+      this.applyLocalFilter();
+    }
   }
 
   selectSpecialty(spec: string) {
-    // this.selectedSpecialty = spec;
-    // if (spec === 'All') {
-    //   this.doctorService.getAllDoctors().subscribe({ next: (docs) => this.filteredDoctors = docs });
-    // } else {
-    //   this.doctorService.getAllDoctors(spec).subscribe({ next: (docs) => this.filteredDoctors = docs });
-    // }
+    this.selectedSpecialty = spec;
+    if (spec === 'All') {
+      this.doctorService.getAllDoctors().subscribe({ next: (docs) => this.filteredDoctors = docs });
+    } else {
+      this.doctorService.getAllDoctors(spec).subscribe({ next: (docs) => this.filteredDoctors = docs });
+    }
   }
 
   private applyLocalFilter() {

@@ -213,3 +213,27 @@
     bottom: var(--nav-height);
   }
 }
+
+.doc-avatar {
+  width: 52px;
+  height: 52px;
+
+  border-radius: 50%;
+  overflow: hidden;
+
+  background: var(--bg-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+}
+
+/* image inside avatar */
+.doc-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+

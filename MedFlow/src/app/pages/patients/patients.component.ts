@@ -28,19 +28,39 @@ export class PatientsComponent implements OnInit {
   constructor(private patientService: PatientService) {}
 
   ngOnInit(): void {
-    // Temporary: load patients 1-20 until backend adds a list endpoint
+
     const requests = Array.from({ length: 5 }, (_, i) =>
       this.patientService.getPatientById(i + 1)
     );
 
-    let completed = 0;
-    requests.forEach(req =>
+    let finished = 0;
+
+    requests.forEach(req => {
       req.subscribe({
-        next: (p) => { this.patients.push(p); },
-        error: () => {},
-        complete: () => { completed++; if (completed === requests.length) this.loading = false; }
-      })
-    );
+
+        next: (p) => {
+          this.patients.push(p);
+        },
+
+        error: () => {
+          finished++;
+
+          if (finished === requests.length) {
+            this.loading = false;
+          }
+        },
+
+        complete: () => {
+          finished++;
+
+          if (finished === requests.length) {
+            this.loading = false;
+          }
+        }
+
+      });
+    });
+
   }
 
   filteredPatients() {

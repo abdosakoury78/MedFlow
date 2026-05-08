@@ -22,24 +22,28 @@
           <p>Welcome back, {{ doctor.name }}</p>
         </div>
 
-        <div class="doctor-status">
-          <!-- FIXED: was doctor.isOnline → doctor.online -->
-          <span
-            class="status-dot"
-            [class.online]="doctor.online">
-          </span>
-          {{ doctor.online ? 'Online' : 'Offline' }}
-        </div>
+      <div class="dashboard-actions">
+
+        <!-- Notifications -->
+        <button class="icon-btn" (click)="toggleNotifications()">
+          <i class="fa-solid fa-bell"></i>
+        </button>
+
+        <!-- Profile -->
+        <button class="icon-btn" (click)="goToProfile()">
+          <i class="fa-solid fa-user"></i>
+        </button>
+
+      </div>
 
       </header>
 
       <!-- Doctor Card -->
       <section class="doctor-card">
 
-        <div class="doctor-avatar">
-          {{ doctor.avatar }}
-        </div>
-
+          <div class="profile-avatar">
+            <img [src]="doctor.avatar" [alt]="doctor.name">
+          </div>
         <div class="doctor-info">
 
           <h2>{{ doctor.name }}</h2>
@@ -54,7 +58,7 @@
             </span>
 
             <!-- FIXED: was doctor.workingHours[0].hours — crashes if array is empty -->
-            <span *ngIf="doctor.workingHours?.length">
+            <span *ngIf="doctor.workingHours.length">
               <i class="fa-solid fa-clock"></i>
               {{ doctor.workingHours[0].hours }}
             </span>

@@ -22,8 +22,8 @@ export class BookAppointmentComponent implements OnInit {
   doctor?: Doctor;
   timeSlots: TimeSlot[] = [];
 
-  selectedSlot?: TimeSlot;
-  selectedDay: number | null = null;
+  selectedSlot?: TimeSlot = undefined;
+  selectedDay: number = 1;
 
   currentDate = new Date();
   today = new Date();
@@ -49,12 +49,29 @@ export class BookAppointmentComponent implements OnInit {
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.doctorService.getDoctorById(id).subscribe({
-      next: (doc) => { this.doctor = doc; },
+      next: (doc) => { this.doctor = doc;
+        this.generateCalendar(); // calendar depends on doctor screen
+      this.setTodayAsSelected(); // 👈 ADD THIS
+       },
       error: () => this.showAlert('Doctor not found', 'error')
     });
     this.generateCalendar();
   }
+setTodayAsSelected() {
+  const now = new Date();
 
+  const isCurrentMonth =
+    this.currentDate.getFullYear() === now.getFullYear() &&
+    this.currentDate.getMonth() === now.getMonth();
+
+  if (isCurrentMonth) {
+    this.selectedDay = now.getDate();
+  } else {
+    this.selectedDay = 1;
+  }
+
+  this.loadSlots();
+}
   generateCalendar() {
     const year = this.currentDate.getFullYear();
     const month = this.currentDate.getMonth();
@@ -72,9 +89,42 @@ export class BookAppointmentComponent implements OnInit {
 
   loadSlots() {
     if (!this.doctor || !this.selectedDay) return;
+
     const date = this.getSelectedDateStr();
+
     this.timeSlotService.getAvailableSlots(this.doctor.id, date).subscribe({
-      next: (slots) => this.timeSlots = slots,
+      next: (slots) => {
+
+        const now = new Date();
+        const isToday =
+          now.getFullYear() === this.currentDate.getFullYear() &&
+          now.getMonth() === this.currentDate.getMonth() &&
+          now.getDate() === this.selectedDay;
+
+        this.timeSlots = slots.map(slot => {
+
+          if (!isToday) {
+            return slot; // all slots are fine for future days
+          }
+
+          // convert slot time → comparable Date
+          const [time, modifier] = slot.time.split(' ');
+          let [hours, minutes] = time.split(':').map(Number);
+
+          if (modifier === 'PM' && hours !== 12) hours += 12;
+          if (modifier === 'AM' && hours === 12) hours = 0;
+
+          const slotDate = new Date();
+          slotDate.setHours(hours, minutes || 0, 0, 0);
+
+          // if slot is in the past → mark unavailable
+          return {
+            ...slot,
+            available: slot.available && slotDate > now
+          };
+        });
+
+      },
       error: () => this.timeSlots = []
     });
   }

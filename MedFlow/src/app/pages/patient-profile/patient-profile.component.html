@@ -30,7 +30,9 @@
       <section class="profile-hero">
 
         <div class="avatar-wrap">
-          <div class="profile-avatar">{{ patient.avatar }}</div>
+          <div class="profile-avatar">
+            <img [src]="patient.avatar" [alt]="patient.name">
+          </div>
           <button class="edit-avatar-btn">
             <i class="fa-solid fa-pen"></i>
           </button>
@@ -97,7 +99,9 @@
                 <div class="history-meta">{{ appt.clinic }} • {{ appt.appointmentDate }}</div>
               </div>
 
-              <span class="badge">{{ appt.status }}</span>
+              <span class="badge" [ngClass]="appt.status.toLowerCase()">
+                {{ appt.status }}
+              </span>
 
             </div>
           </div>

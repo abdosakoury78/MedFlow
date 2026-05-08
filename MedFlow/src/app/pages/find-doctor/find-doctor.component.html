@@ -43,14 +43,35 @@
 
       <!-- Empty state -->
       <div *ngIf="!loading && filteredDoctors.length === 0" class="empty-state">
-        <p>No doctors found.</p>
+
+      <div class="empty-card">
+
+        <div class="empty-icon">
+          <i class="fa-solid fa-user-doctor"></i>
+        </div>
+
+        <h3>No doctors found</h3>
+
+        <p>
+          We couldn’t find any doctors matching your search or filters.
+          Try changing your keywords or specialty.
+        </p>
+
+        <button class="reset-btn" (click)="searchTerm=''; selectedSpecialty='All'; filterDoctors()">
+          Reset Filters
+        </button>
+
       </div>
+
+    </div>
 
       <div class="doctors-grid" *ngIf="!loading">
 
         <div class="doctor-card card" *ngFor="let doc of filteredDoctors">
 
-          <div class="doc-avatar">{{ doc.avatar }}</div>
+          <div class="doc-avatar">
+            <img [src]="doc.avatar" [alt]="doc.name">
+          </div>
 
           <div class="doc-info">
             <h3>{{ doc.name }}</h3>

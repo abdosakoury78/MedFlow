@@ -6,6 +6,7 @@ import { Doctor, Appointment } from '../../shared/models/data';
 import { DoctorService } from '../../services/doctor.service';
 import { AppointmentService } from '../../services/appointment.service';
 import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-doctor-dashboard',
@@ -25,7 +26,8 @@ export class DoctorDashboardComponent implements OnInit {
   constructor(
     private doctorService: DoctorService,
     private appointmentService: AppointmentService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -50,5 +52,15 @@ export class DoctorDashboardComponent implements OnInit {
       next: (appts) => { this.todayAppointments = appts; },
       error: () => {}
     });
+  }
+
+  showNotifications = false;
+
+  toggleNotifications() {
+    this.showNotifications = !this.showNotifications;
+  }
+
+  goToProfile() {
+    this.router.navigate(['/doctor-profile']);
   }
 }

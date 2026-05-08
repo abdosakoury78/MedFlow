@@ -68,7 +68,7 @@
           >
 
             <div class="avatar">
-              {{ p.avatar }}
+              <img [src]="p.avatar" [alt]="p.name">
             </div>
 
             <div class="info">
@@ -101,7 +101,7 @@
         <div class="details-card text-center">
 
           <div class="avatar-large">
-            {{ selectedPatient.avatar }}
+            <img [src]="selectedPatient.avatar" [alt]="selectedPatient.name">
           </div>
 
           <div class="details-info text-center">

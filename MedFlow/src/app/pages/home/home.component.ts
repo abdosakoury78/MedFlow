@@ -44,7 +44,16 @@ export class HomeComponent implements OnInit {
       });
 
       this.appointmentService.getUpcomingAppointments(userId).subscribe({
-        next: (appts) => { this.upcomingAppointments = appts; },
+        next: (appts) => {
+
+          this.upcomingAppointments = appts
+            .sort((a, b) =>
+              new Date(a.appointmentTime).getTime() -
+              new Date(b.appointmentTime).getTime()
+            )
+            .slice(0, 3);
+
+        },
         error: () => {}
       });
     }

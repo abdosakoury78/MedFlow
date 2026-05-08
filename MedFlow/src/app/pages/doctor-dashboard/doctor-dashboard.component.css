@@ -32,34 +32,37 @@
   margin-top: 4px;
 }
 
-/* ===== STATUS ===== */
-
-.doctor-status {
+.dashboard-actions {
   display: flex;
+  gap: 10px;
   align-items: center;
-  gap: 8px;
+}
+
+.icon-btn {
+  width: 42px;
+  height: 42px;
+
+  border: none;
+  border-radius: 50%;
 
   background: white;
-  padding: 10px 16px;
-  border-radius: 14px;
-
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 
-  font-size: 14px;
-  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  font-size: 18px;
+  color: var(--primary);
+
+  transition: 0.2s ease;
 }
 
-.status-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: gray;
+.icon-btn:hover {
+  transform: translateY(-2px);
 }
-
-.status-dot.online {
-  background: #16a34a;
-}
-
 /* ===== DOCTOR CARD ===== */
 
 .doctor-card {
@@ -301,4 +304,29 @@
     align-self: flex-start;
   }
 
+}
+
+.profile-avatar {
+  width: 90px;
+  height: 90px;
+
+  border-radius: 22px;
+  overflow: hidden;
+
+  background: #f1f5f9;
+
+  flex-shrink: 0;
+
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+
+  border: 3px solid white;
+}
+
+/* image */
+.profile-avatar img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+  display: block;
 }

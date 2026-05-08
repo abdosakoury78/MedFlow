@@ -8,16 +8,24 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class AppointmentDTO {
+
     private Long id;
+
     private Long doctorId;
     private Long patientId;
+
     private String doctorName;
+    private String patientName;
+
     private String specialty;
     private String clinic;
+
     private LocalDate appointmentDate;
     private String appointmentTime;
+
     private Integer duration;
     private String status;
+
     private String icon;
     private String iconBg;
 }

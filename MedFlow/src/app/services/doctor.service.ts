@@ -18,8 +18,18 @@ export class DoctorService {
   // GET ALL DOCTORS
   // /api/doctors?specialty=&search=
   // =====================
-  getAllDoctors() : Observable<Doctor[]> {
-    return this.http.get<Doctor[]>(this.baseUrl);
+  getAllDoctors(specialty?: string, search?: string): Observable<Doctor[]> {
+    let params = new HttpParams();
+
+    if (specialty && specialty !== 'All') {
+      params = params.set('specialty', specialty);
+    }
+
+    if (search) {
+      params = params.set('search', search);
+    }
+
+    return this.http.get<Doctor[]>(this.baseUrl, { params });
   }
 
   // =====================

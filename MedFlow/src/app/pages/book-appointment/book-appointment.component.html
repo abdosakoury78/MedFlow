@@ -29,7 +29,9 @@
 
       <!-- Doctor -->
       <div class="doctor-card card">
-        <div class="avatar">{{ doctor.avatar }}</div>
+          <div class="doc-avatar">
+            <img [src]="doctor.avatar" [alt]="doctor.name">
+          </div>
 
         <div class="info text-center">
           <h3>{{ doctor.name }}</h3>

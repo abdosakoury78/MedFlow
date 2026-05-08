@@ -282,3 +282,45 @@ select.form-input {
     min-width: 500px;
   }
 }
+
+
+.avatar-options {
+  display: flex;
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.avatar-card {
+  width: 120px;
+  padding: 12px;
+  border: 2px solid transparent;
+  border-radius: 16px;
+  background: var(--bg-muted);
+  cursor: pointer;
+  text-align: center;
+  transition: 0.2s ease;
+}
+
+.avatar-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+}
+
+.avatar-card.active {
+  border-color: var(--primary);
+  background: #eef6ff;
+}
+
+.avatar-card img {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 8px;
+}
+
+.avatar-card span {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}

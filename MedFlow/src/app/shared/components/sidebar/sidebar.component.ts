@@ -35,4 +35,8 @@ export class SidebarComponent implements OnInit {
     this.authService.logout();
     this.router.navigate(['/login']);
   }
+
+  get displayName(): string {
+    return this.user.name.split('@')[0]; // Extract name from email
+  }
 }

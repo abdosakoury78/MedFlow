@@ -77,13 +77,56 @@
 }
 
 .sidebar-user-avatar {
-  width: 40px;
-  height: 40px;
-  background: var(--bg-muted);
-  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+
+  border-radius: 16px;
+
+  background: linear-gradient(
+    135deg,
+    var(--primary),
+    #249d8f
+  );
+
   display: flex;
   align-items: center;
   justify-content: center;
+
+  color: white;
+  font-size: 18px;
+
+  flex-shrink: 0;
+
+  box-shadow:
+    0 8px 18px rgba(26,122,110,0.18),
+    0 2px 4px rgba(0,0,0,0.05);
+
+  position: relative;
+
+  overflow: hidden;
+}
+
+/* glow effect */
+.sidebar-user-avatar::before {
+  content: '';
+
+  position: absolute;
+
+  top: -12px;
+  right: -12px;
+
+  width: 34px;
+  height: 34px;
+
+  border-radius: 50%;
+
+  background: rgba(255,255,255,0.18);
+}
+
+/* icon */
+.sidebar-user-avatar i {
+  position: relative;
+  z-index: 2;
 }
 
 .sidebar-user-name {

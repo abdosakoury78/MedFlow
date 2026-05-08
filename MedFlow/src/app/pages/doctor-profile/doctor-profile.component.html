@@ -35,7 +35,9 @@
       <!-- Hero -->
       <section class="doc-hero">
         <div class="avatar-wrapper">
-          <div class="doc-avatar">{{ doctor.avatar }}</div>
+          <div class="doc-avatar">
+            <img [src]="doctor.avatar" [alt]="doctor.name">
+          </div>
           <!-- FIXED: was doctor.isOnline — Jackson strips "is" prefix, field is "online" -->
           <span class="status-dot" [class.online]="doctor.online"></span>
         </div>

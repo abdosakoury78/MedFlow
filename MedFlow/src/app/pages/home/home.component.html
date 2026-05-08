@@ -72,7 +72,7 @@
 
           <div class="appointments-list">
             <div
-              class="appointment-card card"
+              class="appointment-card card text-center"
               *ngFor="let appt of upcomingAppointments"
               (click)="navigateToDoctor(appt.doctorId)"
             >
@@ -100,7 +100,7 @@
               <span>Book Visit</span>
             </button>
 
-            <button class="quick-action-btn" (click)="navigateToProfile()">
+            <button class="quick-action-btn" routerLink="/profile">
               <div class="qa-icon"><i class="fa-solid fa-user"></i></div>
               <span>My Profile</span>
             </button>
@@ -127,11 +127,13 @@
 
           <div class="doctors-grid">
             <div
-              class="doctor-card card"
+              class="doctor-card card text-center"
               *ngFor="let doc of doctors"
               (click)="navigateToDoctor(doc.id)"
             >
-              <div class="doc-avatar">{{ doc.avatar }}</div>
+            <div class="doc-avatar">
+              <img [src]="doc.avatar" [alt]="doc.name">
+            </div>
 
               <div class="doc-info">
                 <div class="doc-name">{{ doc.name }}</div>
