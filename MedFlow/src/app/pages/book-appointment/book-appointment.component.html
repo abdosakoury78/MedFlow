@@ -1,11 +1,9 @@
 <div class="app-layout">
-
   <!-- Sidebar -->
   <app-sidebar></app-sidebar>
 
   <!-- Main -->
   <div class="main-content">
-
     <app-alert
       [message]="alertMessage"
       [type]="alertType"
@@ -19,7 +17,6 @@
     </div>
 
     <div class="page-container" *ngIf="doctor">
-
       <!-- Header -->
       <header class="page-header">
         <button class="icon-btn" (click)="goBack()">←</button>
@@ -29,9 +26,13 @@
 
       <!-- Doctor -->
       <div class="doctor-card card">
-          <div class="doc-avatar">
-            <img [src]="doctor.avatar" [alt]="doctor.name">
-          </div>
+        <div class="doc-avatar">
+          <img
+            [src]="doctor.avatar"
+            [alt]="doctor.name"
+            title="Doctor avatar"
+          />
+        </div>
 
         <div class="info text-center">
           <h3>{{ doctor.name }}</h3>
@@ -42,10 +43,8 @@
 
       <!-- Split Layout -->
       <div class="booking-layout">
-
         <!-- LEFT: CALENDAR -->
         <div class="calendar-section card">
-
           <div class="calendar-header">
             <button (click)="prevMonth()" [disabled]="isPastMonth()">‹</button>
             <h3>{{ currentMonth }}</h3>
@@ -67,12 +66,10 @@
               {{ d }}
             </button>
           </div>
-
         </div>
 
         <!-- RIGHT: SLOTS -->
         <div class="slots-section">
-
           <h3>Available Time</h3>
 
           <div *ngIf="timeSlots.length === 0" class="empty-state">
@@ -83,23 +80,18 @@
             <button
               *ngFor="let slot of timeSlots"
               class="slot"
-              [class.active]="selectedSlot?.id === slot.id"
+              [class.active]="isSelected(slot)"
               [disabled]="!slot.available"
               (click)="selectSlot(slot)"
             >
               {{ slot.time }}
             </button>
           </div>
-
         </div>
-
       </div>
 
       <!-- Info -->
-      <div class="info-banner">
-        ℹ️ Please arrive 15 minutes early
-      </div>
-
+      <div class="info-banner">ℹ️ Please arrive 15 minutes early</div>
     </div>
 
     <!-- Footer -->
@@ -121,6 +113,5 @@
     </div>
 
     <app-navbar activePage="appointments"></app-navbar>
-
   </div>
 </div>

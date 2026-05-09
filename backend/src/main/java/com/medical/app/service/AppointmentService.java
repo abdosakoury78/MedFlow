@@ -10,6 +10,7 @@ import com.medical.app.repository.DoctorRepository;
 import com.medical.app.repository.PatientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -58,6 +59,7 @@ public class AppointmentService {
         }
 
         // ── Book a new appointment ───────────────────────
+        @Transactional
         public AppointmentDTO createAppointment(CreateAppointmentDTO req) {
                 Patient patient = patientRepository.findById(req.getPatientId())
                                 .orElseThrow(() -> new RuntimeException("Patient not found"));
@@ -84,6 +86,7 @@ public class AppointmentService {
         }
 
         // ── Cancel an appointment ────────────────────────
+        @Transactional
         public AppointmentDTO cancelAppointment(Long appointmentId) {
                 Appointment appointment = appointmentRepository.findById(appointmentId)
                                 .orElseThrow(() -> new RuntimeException("Appointment not found"));
@@ -94,6 +97,7 @@ public class AppointmentService {
         }
 
         // ── Complete an appointment ──────────────────────
+        @Transactional
         public AppointmentDTO completeAppointment(Long appointmentId) {
                 Appointment appointment = appointmentRepository.findById(appointmentId)
                                 .orElseThrow(() -> new RuntimeException("Appointment not found"));
@@ -120,5 +124,23 @@ public class AppointmentService {
                                 .icon(a.getIcon())
                                 .iconBg(a.getIconBg())
                                 .build();
+        }
+
+        // Upcoming appointments for doctor
+        public List<AppointmentDTO> getUpcomingAppointmentsForDoctor(Long doctorId) {
+                return appointmentRepository
+                                .findUpcomingByDoctor(doctorId, LocalDate.now())
+                                .stream()
+                                .map(this::toDTO)
+                                .collect(Collectors.toList());
+        }
+
+        // History for doctor
+        public List<AppointmentDTO> getHistoryForDoctor(Long doctorId) {
+                return appointmentRepository
+                                .findByDoctorIdAndStatus(doctorId, "COMPLETED")
+                                .stream()
+                                .map(this::toDTO)
+                                .collect(Collectors.toList());
         }
 }

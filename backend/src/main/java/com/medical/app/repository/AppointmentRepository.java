@@ -11,28 +11,45 @@ import java.util.List;
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
 
-    // All appointments for a patient
-    List<Appointment> findByPatientId(Long patientId);
+        // All appointments for a patient
+        List<Appointment> findByPatientId(Long patientId);
 
-    // Appointments by status for a patient
-    List<Appointment> findByPatientIdAndStatus(Long patientId, String status);
+        // Appointments by status for a patient
+        List<Appointment> findByPatientIdAndStatus(Long patientId, String status);
 
-    // Today's appointments for a patient
-    List<Appointment> findByPatientIdAndAppointmentDate(
-            Long patientId, LocalDate date);
+        // Today's appointments for a patient
+        List<Appointment> findByPatientIdAndAppointmentDate(
+                        Long patientId, LocalDate date);
 
-    // Today's appointments for a doctor
-    List<Appointment> findByDoctorIdAndAppointmentDate(
-            Long doctorId, LocalDate date);
+        // Today's appointments for a doctor
+        List<Appointment> findByDoctorIdAndAppointmentDate(
+                        Long doctorId, LocalDate date);
 
-    // Upcoming appointments (date >= today)
-    @Query("SELECT a FROM Appointment a WHERE a.patient.id = :patientId " +
-           "AND a.appointmentDate >= :today AND a.status = 'UPCOMING' " +
-           "ORDER BY a.appointmentDate ASC, a.appointmentTime ASC")
-    List<Appointment> findUpcomingByPatient(
-            @Param("patientId") Long patientId,
-            @Param("today") LocalDate today);
+        // Upcoming appointments (date >= today)
+        @Query("SELECT a FROM Appointment a WHERE a.patient.id = :patientId " +
+                        "AND a.appointmentDate >= :today AND a.status = 'UPCOMING' " +
+                        "ORDER BY a.appointmentDate ASC, a.appointmentTime ASC")
+        List<Appointment> findUpcomingByPatient(
+                        @Param("patientId") Long patientId,
+                        @Param("today") LocalDate today);
 
-    // All appointments for a doctor
-    List<Appointment> findByDoctorId(Long doctorId);
+        // All appointments for a doctor
+        List<Appointment> findByDoctorId(Long doctorId);
+
+        // Upcoming appointments for doctor
+        @Query("""
+                            SELECT a FROM Appointment a
+                            WHERE a.doctor.id = :doctorId
+                            AND a.appointmentDate >= :today
+                            AND a.status = 'UPCOMING'
+                            ORDER BY a.appointmentDate ASC, a.appointmentTime ASC
+                        """)
+        List<Appointment> findUpcomingByDoctor(
+                        @Param("doctorId") Long doctorId,
+                        @Param("today") LocalDate today);
+
+        // History for doctor
+        List<Appointment> findByDoctorIdAndStatus(
+                        Long doctorId,
+                        String status);
 }

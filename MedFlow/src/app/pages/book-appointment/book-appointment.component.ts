@@ -125,8 +125,99 @@ setTodayAsSelected() {
         });
 
       },
-      error: () => this.timeSlots = []
+      error: () => this.timeSlots = [],
+      complete: () => {
+        // If backend returned no timeslots, fallback to doctor's working hours
+        if ((!this.timeSlots || this.timeSlots.length === 0) && this.doctor && this.doctor.workingHours) {
+          const generated = this.generateSlotsFromWorkingHours(this.doctor.workingHours, this.getSelectedDateStr());
+          this.timeSlots = generated;
+        }
+      }
     });
+  }
+
+  // Build available time slots from doctor's workingHours (e.g. "Sun-Thu", "9:00 AM - 3:00 PM")
+  private generateSlotsFromWorkingHours(workingHours: { days: string; hours: string }[], dateStr: string) {
+    const date = new Date(dateStr);
+    const dayName = date.toLocaleDateString('en-US', { weekday: 'short' }); // e.g. 'Sun'
+
+    const slots: any[] = [];
+
+    workingHours.forEach(wh => {
+      if (!this.workingHourAppliesToDay(wh.days, dayName)) return;
+
+      // hours like "9:00 AM - 3:00 PM"
+      const parts = wh.hours.split('-').map(p => p.trim());
+      if (parts.length !== 2) return;
+      const start = this.parseTimeToDate(parts[0]);
+      const end = this.parseTimeToDate(parts[1]);
+
+      const cursor = new Date(start);
+      while (cursor < end) {
+        const h = cursor.getHours();
+        const m = cursor.getMinutes();
+        const timeStr = this.formatTime(h, m);
+        slots.push({
+          id: -1, // placeholder — no persisted timeslot
+          doctorId: this.doctor!.id,
+          slotDate: dateStr,
+          time: timeStr,
+          available: true
+        });
+        cursor.setMinutes(cursor.getMinutes() + 30);
+      }
+    });
+
+    return slots;
+  }
+
+  private workingHourAppliesToDay(daysSpec: string, shortDay: string) {
+    // daysSpec examples: "Sun-Thu", "Sat", "Mon-Fri"
+    if (!daysSpec) return false;
+    const entries = daysSpec.split(',').map(s => s.trim());
+    const order = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+    for (const e of entries) {
+      if (e.includes('-')) {
+        const [from, to] = e.split('-').map(s => s.trim());
+        const fromIdx = order.indexOf(this.normalizeDay(from));
+        const toIdx = order.indexOf(this.normalizeDay(to));
+        const target = order.indexOf(shortDay);
+        if (fromIdx === -1 || toIdx === -1) continue;
+        if (fromIdx <= toIdx) {
+          if (target >= fromIdx && target <= toIdx) return true;
+        } else {
+          // wrap-around (e.g. Fri-Mon)
+          if (target >= fromIdx || target <= toIdx) return true;
+        }
+      } else {
+        if (this.normalizeDay(e) === this.normalizeDay(shortDay)) return true;
+      }
+    }
+    return false;
+  }
+
+  private normalizeDay(d: string) {
+    if (!d) return '';
+    const s = d.trim();
+    const short = s.length >= 3 ? s.slice(0, 3) : s;
+    return short.charAt(0).toUpperCase() + short.slice(1).toLowerCase();
+  }
+
+  private parseTimeToDate(t: string) {
+    // t like "9:00 AM" or "12:30 PM"
+    const [time, modifier] = t.split(' ').map(s => s.trim());
+    let [hours, minutes] = time.split(':').map(Number);
+    if (modifier === 'PM' && hours !== 12) hours += 12;
+    if (modifier === 'AM' && hours === 12) hours = 0;
+    const d = new Date(); d.setHours(hours, minutes || 0, 0, 0); return d;
+  }
+
+  private formatTime(hours: number, minutes: number) {
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    let h = hours % 12; if (h === 0) h = 12;
+    const m = String(minutes).padStart(2, '0');
+    return `${String(h).padStart(2,'0')}:${m} ${ampm}`;
   }
 
   getSelectedDateStr(): string {
@@ -176,6 +267,18 @@ setTodayAsSelected() {
     this.selectedSlot = slot;
   }
 
+  isSelected(slot: TimeSlot) {
+    if (!this.selectedSlot) return false;
+    // Prefer DB id comparison when possible
+    const selId = (this.selectedSlot as any).id;
+    const slotId = (slot as any).id;
+    if (typeof selId === 'number' && selId > 0 && typeof slotId === 'number' && slotId > 0) {
+      return selId === slotId;
+    }
+    // Fallback: compare by time + date for generated slots
+    return this.selectedSlot?.time === slot.time && (this.selectedSlot as any).slotDate === (slot as any).slotDate;
+  }
+
   confirmBooking() {
     if (!this.selectedDay || !this.selectedSlot) {
       this.showAlert('Please select date and time first', 'warning');
@@ -200,8 +303,10 @@ setTodayAsSelected() {
 
     this.appointmentService.createAppointment(payload).subscribe({
       next: () => {
-        // Also mark the time slot as booked
-        this.timeSlotService.bookSlot(this.selectedSlot!.id).subscribe();
+        // Also mark the time slot as booked only if it exists in DB
+        if (this.selectedSlot && (this.selectedSlot.id && this.selectedSlot.id > 0)) {
+          this.timeSlotService.bookSlot(this.selectedSlot.id).subscribe({ error: () => {} });
+        }
         this.confirmed = true;
         this.loading = false;
         this.showAlert('Appointment booked successfully 🎉', 'success');

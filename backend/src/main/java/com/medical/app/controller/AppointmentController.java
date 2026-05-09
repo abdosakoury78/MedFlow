@@ -75,4 +75,22 @@ public class AppointmentController {
     public ResponseEntity<AppointmentDTO> completeAppointment(@PathVariable Long id) {
         return ResponseEntity.ok(appointmentService.completeAppointment(id));
     }
+
+    // GET /api/appointments/doctor/{doctorId}/upcoming
+    @GetMapping("/doctor/{doctorId}/upcoming")
+    public ResponseEntity<List<AppointmentDTO>> getUpcomingAppointmentsForDoctor(
+            @PathVariable Long doctorId) {
+
+        return ResponseEntity.ok(
+                appointmentService.getUpcomingAppointmentsForDoctor(doctorId));
+    }
+
+    // GET /api/appointments/doctor/{doctorId}/history
+    @GetMapping("/doctor/{doctorId}/history")
+    public ResponseEntity<List<AppointmentDTO>> getHistoryForDoctor(
+            @PathVariable Long doctorId) {
+
+        return ResponseEntity.ok(
+                appointmentService.getHistoryForDoctor(doctorId));
+    }
 }

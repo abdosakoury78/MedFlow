@@ -1,10 +1,18 @@
 package com.medical.app;
 
+import com.medical.app.dto.AppointmentDTO;
+import com.medical.app.dto.CreateAppointmentDTO;
 import com.medical.app.dto.DoctorSignupRequest;
 import com.medical.app.dto.PatientSignupRequest;
 import com.medical.app.dto.WorkingHourDTO;
+import com.medical.app.entity.Doctor;
+import com.medical.app.entity.Patient;
+import com.medical.app.entity.TimeSlot;
+import com.medical.app.repository.AppointmentRepository;
 import com.medical.app.repository.DoctorRepository;
 import com.medical.app.repository.PatientRepository;
+import com.medical.app.repository.TimeSlotRepository;
+import com.medical.app.service.AppointmentService;
 import com.medical.app.service.DoctorService;
 import com.medical.app.service.PatientService;
 import org.springframework.boot.SpringApplication;
@@ -12,6 +20,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 @SpringBootApplication
@@ -25,8 +34,11 @@ public class DemoApplication {
 	public org.springframework.boot.CommandLineRunner seedDemoData(
 			PatientService patientService,
 			DoctorService doctorService,
+			AppointmentService appointmentService,
 			PatientRepository patientRepository,
-			DoctorRepository doctorRepository) {
+			DoctorRepository doctorRepository,
+			AppointmentRepository appointmentRepository,
+			TimeSlotRepository timeSlotRepository) {
 		return args -> {
 			for (PatientSignupRequest request : demoPatients()) {
 				if (!patientRepository.existsByEmail(request.getEmail())) {
@@ -39,6 +51,9 @@ public class DemoApplication {
 					doctorService.createDoctor(request);
 				}
 			}
+
+			seedTimeSlots(timeSlotRepository, doctorRepository);
+			seedAppointments(appointmentService, appointmentRepository, patientRepository, doctorRepository);
 		};
 	}
 
@@ -67,7 +82,10 @@ public class DemoApplication {
 				createPatient("Mahmoud Gamal", "mahmoud.gamal@medflow.com", "Mahmoud#900", "01177889900", "Helwan", 30,
 						"O+", "male", "../../../assets/avatars/boy.png"),
 				createPatient("Salma Ibrahim", "salma.ibrahim@medflow.com", "Salma!5522", "01299001122",
-						"6th of October", 23, "B+", "female", "../../../assets/avatars/girl.png"));
+						"6th of October", 23, "B+", "female", "../../../assets/avatars/girl.png"),
+				// ✅ ADDED: Missing patient used in seedAppointments
+				createPatient("Laila Hamed", "laila.hamed@medflow.com", "Laila@2026!", "01166778899", "Cairo", 26,
+						"O+", "female", "../../../assets/avatars/girl.png"));
 	}
 
 	private List<DoctorSignupRequest> demoDoctors() {
@@ -109,14 +127,16 @@ public class DemoApplication {
 								createWorkingHour("Sat", "12:00 PM - 3:00 PM"))),
 				createDoctor("Dr. Salma Nader", "Gynecologist", "salma.nader@medflow.com", "Salma@8899", 10,
 						new BigDecimal("4.8"), 111, 2265, "assets/avatars/doctor-girl.png",
-						"Women’s health specialist for prenatal care, fertility support, and routine examinations.",
-						new BigDecimal("130.00"), true, List.of("Gynecology", "Prenatal Care", "Fertility"), List.of(
+						"Women's health specialist for prenatal care, fertility support, and routine examinations.",
+						new BigDecimal("130.00"), true, List.of("Gynecology", "Prenatal Care", "Fertility"),
+						List.of(
 								createWorkingHour("Sun-Thu", "9:30 AM - 4:30 PM"),
 								createWorkingHour("Fri", "10:00 AM - 1:00 PM"))),
 				createDoctor("Dr. Hani Saber", "ENT Specialist", "hani.saber@medflow.com", "Hani@3456", 11,
 						new BigDecimal("4.5"), 79, 1735, "assets/avatars/doctor-boy.png",
 						"ENT consultations for sinus problems, ear infections, and throat conditions.",
-						new BigDecimal("100.00"), true, List.of("ENT", "Sinus Care", "Hearing Tests"), List.of(
+						new BigDecimal("100.00"), true, List.of("ENT", "Sinus Care", "Hearing Tests"),
+						List.of(
 								createWorkingHour("Sat-Thu", "12:00 PM - 6:00 PM"),
 								createWorkingHour("Fri", "2:00 PM - 5:00 PM"))),
 				createDoctor("Dr. Dina Farouk", "Endocrinologist", "dina.farouk@medflow.com", "Dina#3311", 14,
@@ -205,4 +225,134 @@ public class DemoApplication {
 		return workingHour;
 	}
 
+	private void seedTimeSlots(TimeSlotRepository timeSlotRepository, DoctorRepository doctorRepository) {
+		if (timeSlotRepository.count() > 0) {
+			return;
+		}
+
+		Doctor julian = requireDoctor(doctorRepository, "julian.sterling@medflow.com");
+		Doctor layla = requireDoctor(doctorRepository, "layla.mansour@medflow.com");
+		Doctor karim = requireDoctor(doctorRepository, "karim.adel@medflow.com");
+		Doctor noor = requireDoctor(doctorRepository, "noor.hassan@medflow.com");
+		Doctor omar = requireDoctor(doctorRepository, "omar.fathy@medflow.com");
+		Doctor salma = requireDoctor(doctorRepository, "salma.nader@medflow.com");
+
+		timeSlotRepository.saveAll(List.of(
+				createTimeSlot(julian, LocalDate.now(), "9:00 AM", true),
+				createTimeSlot(julian, LocalDate.now(), "10:00 AM", false),
+				createTimeSlot(julian, LocalDate.now().plusDays(1), "11:00 AM", true),
+				createTimeSlot(layla, LocalDate.now(), "11:30 AM", false),
+				createTimeSlot(layla, LocalDate.now().plusDays(1), "12:30 PM", true),
+				createTimeSlot(karim, LocalDate.now().plusDays(1), "1:00 PM", true),
+				createTimeSlot(noor, LocalDate.now(), "8:30 AM", true),
+				createTimeSlot(omar, LocalDate.now().plusDays(2), "2:00 PM", true),
+				createTimeSlot(salma, LocalDate.now().plusDays(1), "9:30 AM", true),
+				createTimeSlot(salma, LocalDate.now().plusDays(2), "10:30 AM", false)));
+	}
+
+	private CreateAppointmentDTO createAppointment(
+			PatientRepository patientRepository,
+			DoctorRepository doctorRepository,
+			String patientEmail,
+			String doctorEmail,
+			LocalDate appointmentDate,
+			String appointmentTime,
+			Integer duration,
+			String clinic,
+			String icon,
+			String iconBg) {
+		Patient patient = requirePatient(patientRepository, patientEmail);
+		Doctor doctor = requireDoctor(doctorRepository, doctorEmail);
+
+		return CreateAppointmentDTO.builder()
+				.patientId(patient.getId())
+				.doctorId(doctor.getId())
+				.appointmentDate(appointmentDate)
+				.appointmentTime(appointmentTime)
+				.duration(duration)
+				.clinic(clinic)
+				.icon(icon)
+				.iconBg(iconBg)
+				.build();
+	}
+
+	private TimeSlot createTimeSlot(Doctor doctor, LocalDate slotDate, String time, boolean available) {
+		return TimeSlot.builder()
+				.doctor(doctor)
+				.slotDate(slotDate)
+				.time(time)
+				.available(available)
+				.build();
+	}
+
+	private Patient requirePatient(PatientRepository patientRepository, String email) {
+		return patientRepository.findByEmail(email)
+				.orElseThrow(() -> new IllegalStateException("Missing patient seed: " + email));
+	}
+
+	private Doctor requireDoctor(DoctorRepository doctorRepository, String email) {
+		return doctorRepository.findByEmail(email)
+				.orElseThrow(() -> new IllegalStateException("Missing doctor seed: " + email));
+	}
+
+	private void seedAppointments(
+			AppointmentService appointmentService,
+			AppointmentRepository appointmentRepository,
+			PatientRepository patientRepository,
+			DoctorRepository doctorRepository) {
+		if (appointmentRepository.count() > 0) {
+			return;
+		}
+
+		AppointmentDTO booked1 = appointmentService.createAppointment(createAppointment(
+				patientRepository, doctorRepository,
+				"ahmed.ali@medflow.com", "julian.sterling@medflow.com",
+				LocalDate.now(), "10:00 AM", 30,
+				"Central Clinic", "fa-stethoscope", "#e8f3ff"));
+
+		AppointmentDTO booked2 = appointmentService.createAppointment(createAppointment(
+				patientRepository, doctorRepository,
+				"sara.adel@medflow.com", "layla.mansour@medflow.com",
+				LocalDate.now(), "11:30 AM", 45,
+				"Dermatology Center", "fa-face-smile", "#f3e8ff"));
+
+		AppointmentDTO booked3 = appointmentService.createAppointment(createAppointment(
+				patientRepository, doctorRepository,
+				"omar.hassan@medflow.com", "hani.saber@medflow.com",
+				LocalDate.now(), "1:00 PM", 30,
+				"ENT Clinic", "fa-ear-listen", "#eef2ff"));
+		appointmentService.completeAppointment(booked3.getId());
+
+		AppointmentDTO booked4 = appointmentService.createAppointment(createAppointment(
+				patientRepository, doctorRepository,
+				"mona.farid@medflow.com", "salma.nader@medflow.com",
+				LocalDate.now().plusDays(1), "9:00 AM", 40,
+				"Women Health Clinic", "fa-person-pregnant", "#fff1f2"));
+
+		AppointmentDTO booked5 = appointmentService.createAppointment(createAppointment(
+				patientRepository, doctorRepository,
+				"youssef.nabil@medflow.com", "dina.farouk@medflow.com",
+				LocalDate.now().plusDays(1), "2:00 PM", 30,
+				"Endocrine Care", "fa-vial-circle-check", "#ecfeff"));
+		appointmentService.cancelAppointment(booked5.getId());
+
+		// ✅ FIXED: laila.hamed@medflow.com now exists in demoPatients()
+		appointmentService.createAppointment(createAppointment(
+				patientRepository, doctorRepository,
+				"laila.hamed@medflow.com", "noor.hassan@medflow.com",
+				LocalDate.now().plusDays(2), "12:30 PM", 30,
+				"Pediatrics Unit", "fa-baby", "#f0fdf4"));
+
+		appointmentService.createAppointment(createAppointment(
+				patientRepository, doctorRepository,
+				"salma.ibrahim@medflow.com", "mostafa.rami@medflow.com",
+				LocalDate.now().plusDays(3), "4:00 PM", 50,
+				"Mental Health Office", "fa-brain", "#fff7ed"));
+
+		appointmentService.createAppointment(createAppointment(
+				patientRepository, doctorRepository,
+				"khaled.samir@medflow.com", "karim.adel@medflow.com",
+				LocalDate.now().minusDays(1), "3:30 PM", 30,
+				"Orthopedic Clinic", "fa-bone", "#f8fafc"));
+	}
 }

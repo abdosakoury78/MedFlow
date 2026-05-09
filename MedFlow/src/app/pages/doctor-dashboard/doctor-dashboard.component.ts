@@ -44,7 +44,7 @@ export class DoctorDashboardComponent implements OnInit {
         this.loading = false;
         this.stats = [
           { title: 'Patients', value: doc.patientsCount, icon: 'fa-users' },
-          { title: 'Reviews', value: doc.reviews, icon: 'fa-star' },
+           { title: 'Reviews', value: doc.reviews, icon: 'fa-star' },
           { title: 'Experience', value: `${doc.experience} yrs`, icon: 'fa-briefcase' },
           { title: 'Rating', value: doc.rating, icon: 'fa-chart-line' }
         ];

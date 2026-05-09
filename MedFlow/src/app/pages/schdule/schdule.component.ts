@@ -41,13 +41,13 @@ export class SchduleComponent implements OnInit {
     if (!doctorId) return;
 
     // Using patientId endpoints as placeholder — add /doctor/{id} endpoints on backend
-    this.appointmentService.getTodayAppointments(doctorId).subscribe({
+    this.appointmentService.getDoctorTodayAppointments(doctorId).subscribe({
       next: (a) => { this.todayAppointments = a; this.loading = false;
                 this.patientIds = Array.from(new Set([...this.patientIds, ...a.map(app => app.patientId)]));
        },
       error: () => { this.loading = false; }
     });
-    this.appointmentService.getUpcomingAppointments(doctorId).subscribe({
+    this.appointmentService.getDoctorUpcomingAppointments(doctorId).subscribe({
       next: (a) => {this.upcomingAppointments = a; console.log('Upcoming appointments:', a); 
         this.patientIds = Array.from(new Set([...this.patientIds, ...a.map(app => app.patientId)]));
 
@@ -63,7 +63,7 @@ export class SchduleComponent implements OnInit {
       error: () => {}
       
     });
-    this.appointmentService.getHistory(doctorId).subscribe({
+    this.appointmentService.getDoctorHistoryAppointments(doctorId).subscribe({
       next: (a) => {this.historyAppointments = a
                 this.patientIds = Array.from(new Set([...this.patientIds, ...a.map(app => app.patientId)]));
       },

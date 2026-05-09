@@ -41,7 +41,6 @@
       </div>
 
       <!-- TODAY -->
-      <!-- FIXED: was appt.patient, appt.avatar, appt.clinic — real DTO fields are doctorName, specialty, appointmentTime, clinic -->
       <section *ngIf="activeTab === 'today' && !loading" class="section">
         <h2 class="section-title">Today's Appointments</h2>
 
@@ -54,23 +53,61 @@
             class="appointment-card card text-center"
             *ngFor="let appt of todayAppointments"
           >
-            <div class="avatar"></div>
+            <!-- Avatar -->
+            <div class="avatar">
+              <img
+                *ngIf="getPatient(appt.patientId)?.avatar"
+                [src]="getPatient(appt.patientId)?.avatar"
+                [alt]="appt.patientName"
+              />
 
-            <div class="info">
-              <h3>{{ appt.patientName }}</h3>
-
-              <div class="meta">
-                <span
-                  ><i class="fa-regular fa-clock"></i>
-                  {{ appt.appointmentTime }}</span
-                >
-                <span *ngIf="appt.clinic"
-                  ><i class="fa-solid fa-location-dot"></i>
-                  {{ appt.clinic }}</span
-                >
+              <div
+                *ngIf="!getPatient(appt.patientId)?.avatar"
+                class="placeholder-avatar"
+              >
+                {{ appt.patientName?.charAt(0) || "?" }}
               </div>
             </div>
 
+            <!-- Patient Info -->
+            <div class="info">
+              <h3>{{ appt.patientName }}</h3>
+
+              <p class="patient-email">
+                {{ getPatient(appt.patientId)?.email }}
+              </p>
+
+              <div class="meta">
+                <span>
+                  <i class="fa-regular fa-clock"></i>
+                  {{ appt.appointmentTime }}
+                </span>
+
+                <span *ngIf="appt.clinic">
+                  <i class="fa-solid fa-location-dot"></i>
+                  {{ appt.clinic }}
+                </span>
+              </div>
+
+              <div class="meta">
+                <span>
+                  <i class="fa-solid fa-phone"></i>
+                  {{ getPatient(appt.patientId)?.phone }}
+                </span>
+
+                <span>
+                  <i class="fa-solid fa-user"></i>
+                  {{ getPatient(appt.patientId)?.gender }}
+                </span>
+
+                <span>
+                  <i class="fa-solid fa-cake-candles"></i>
+                  {{ getPatient(appt.patientId)?.age }} yrs
+                </span>
+              </div>
+            </div>
+
+            <!-- Status -->
             <div class="status" [ngClass]="appt.status.toLowerCase()">
               {{ appt.status }}
             </div>

@@ -68,4 +68,23 @@ export class AppointmentService {
   cancelAppointment(id: number): Observable<Appointment> {
     return this.http.patch<Appointment>(`${this.baseUrl}/${id}/cancel`, {});
   }
+
+
+  getDoctorTodayAppointments(doctorId: number) {
+  return this.http.get<Appointment[]>(
+    `${this.baseUrl}/doctor/${doctorId}/today`
+  );
+}
+
+getDoctorUpcomingAppointments(doctorId: number) {
+  return this.http.get<Appointment[]>(
+    `${this.baseUrl}/doctor/${doctorId}/upcoming`
+  );
+}
+
+getDoctorHistoryAppointments(doctorId: number) {
+  return this.http.get<Appointment[]>(
+    `${this.baseUrl}/doctor/${doctorId}/history`
+  );
+}
 }
